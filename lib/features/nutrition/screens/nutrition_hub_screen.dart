@@ -346,7 +346,10 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
               ],
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () => Navigator.push(
+                context,
+                AppRoute(page: const MealDetailScreen()),
+              ),
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -591,7 +594,10 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () => Navigator.push(
+              context,
+              AppRoute(page: const MealDetailScreen()),
+            ),
             child: Container(
               width: 32,
               height: 32,

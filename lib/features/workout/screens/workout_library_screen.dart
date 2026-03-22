@@ -235,7 +235,23 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
 
                     // Start Session button
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Session started! Get ready.',
+                              style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                            ),
+                            backgroundColor: const Color(0xFF00BFFF),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            margin:
+                                const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 18, vertical: 10),
@@ -332,7 +348,22 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
   Widget _programCard(Map<String, dynamic> p) {
     final badgeColor = p['badgeColor'] as Color;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Opening: ${p['title']}',
+              style: GoogleFonts.plusJakartaSans(fontSize: 13),
+            ),
+            backgroundColor: const Color(0xFF00BFFF),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      },
       child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

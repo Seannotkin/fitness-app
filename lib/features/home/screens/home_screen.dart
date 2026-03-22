@@ -575,7 +575,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      setState(() => _currentNavIndex = 1);
+                      Navigator.push(
+                        context,
+                        AppRoute(page: const WorkoutLibraryScreen()),
+                      ).then((_) => setState(() => _currentNavIndex = 0));
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 7),

@@ -601,7 +601,22 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           const SizedBox(height: 10),
           // Secondary: Add to Journal
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Added to your wellness journal.',
+                    style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                  ),
+                  backgroundColor: const Color(0xFF4E6451),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),
