@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
+import 'exercise_detail_screen.dart';
 
 class WorkoutLibraryScreen extends StatefulWidget {
   const WorkoutLibraryScreen({super.key});
@@ -13,30 +14,48 @@ class WorkoutLibraryScreen extends StatefulWidget {
 
 class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
   int _currentNavIndex = 1;
+  int _selectedCategory = 0;
+
+  static const _bg = Color(0xFFFBFAF8);
+  static const _primary = Color(0xFF4E6451);
+  static const _primaryContainer = Color(0xFFD0E9D1);
+  static const _onSurface = Color(0xFF303333);
+  static const _secondary = Color(0xFF5A605C);
+  static const _cardBg = Color(0xFFFFFFFF);
+  static const _outline = Color(0xFFE1E3E3);
+
+  void _openExercise() {
+    Navigator.push(context, AppRoute(page: const ExerciseDetailScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF131313),
+      backgroundColor: _bg,
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _header(),
                     const SizedBox(height: 20),
-                    _dailySessionCard(),
-                    const SizedBox(height: 24),
-                    _programsSection(),
-                    const SizedBox(height: 24),
-                    _metricsRow(),
+                    _currentProgramCard(),
+                    const SizedBox(height: 16),
+                    _dailyRitualCard(),
+                    const SizedBox(height: 22),
+                    _trainingSplit(),
+                    const SizedBox(height: 22),
+                    _targetFocus(),
+                    const SizedBox(height: 22),
+                    _newAndNotable(),
                     const SizedBox(height: 16),
                   ],
                 ),
@@ -49,233 +68,211 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
     );
   }
 
+  // ─── Header ────────────────────────────────────────────────────────────────
+
   Widget _header() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
           children: [
+            GestureDetector(
+              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Menu',
+                      style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+                  backgroundColor: _primary,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  duration: const Duration(seconds: 1),
+                ),
+              ),
+              child: const Icon(Icons.menu, color: _onSurface, size: 24),
+            ),
+            const SizedBox(width: 12),
             Text(
-              'NEON LAB',
-              style: GoogleFonts.spaceGrotesk(
+              'Sage & Solace',
+              style: GoogleFonts.manrope(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF8FD6FF),
-                letterSpacing: -0.36,
-              ),
-            ),
-            Text(
-              'Workout',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                color: const Color(0xFFBCC8D1),
-                letterSpacing: 0.6,
+                color: _onSurface,
               ),
             ),
           ],
         ),
-        Row(
-          children: [
-            const Icon(Icons.settings_outlined,
-                color: Color(0xFFBCC8D1), size: 20),
-            const SizedBox(width: 12),
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF2A2A2A),
-                border: Border.all(
-                    color: const Color(0xFF8FD6FF).withOpacity(0.3), width: 1),
-              ),
-              child: const Icon(Icons.person,
-                  color: Color(0xFF8FD6FF), size: 17),
-            ),
-          ],
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _primaryContainer,
+          ),
+          child: const Icon(Icons.person, color: _primary, size: 20),
         ),
       ],
     );
   }
 
-  Widget _dailySessionCard() {
+  // ─── Current Program ───────────────────────────────────────────────────────
+
+  Widget _currentProgramCard() {
     return Container(
-      height: 260,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
-          colors: [Color(0xFF0A2A3A), Color(0xFF0D4060), Color(0xFF00BFFF)],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
+          colors: [Color(0xFF4E6451), Color(0xFF3A4D3C)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF00BFFF).withOpacity(0.20),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.spa, color: Color(0xFFBFDAC1), size: 16),
+              const SizedBox(width: 6),
+              Text(
+                'Current Program',
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    color: const Color(0xFFBFDAC1),
+                    fontWeight: FontWeight.w500),
+              ),
+              const Spacer(),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(9999),
+                ),
+                child: Text(
+                  'Week 2 of 4',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Strength in Stillness',
+            style: GoogleFonts.manrope(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Focusing on functional foundations and mindful muscle engagement',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 13,
+              color: Colors.white.withValues(alpha: 0.78),
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(9999),
+                  child: LinearProgressIndicator(
+                    value: 0.45,
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFFBFDAC1)),
+                    minHeight: 5,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '45%',
+                style: GoogleFonts.manrope(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          // Dark overlay gradient at bottom
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF000000).withOpacity(0.7),
-                    Colors.transparent,
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ),
-              ),
-            ),
-          ),
+    );
+  }
 
-          Padding(
-            padding: const EdgeInsets.all(20),
+  // ─── Daily Ritual ──────────────────────────────────────────────────────────
+
+  Widget _dailyRitualCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: _outline),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: _primaryContainer.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child:
+                const Icon(Icons.wb_sunny_outlined, color: _primary, size: 24),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Date + program badge
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF00BFFF).withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(9999),
-                        border: Border.all(
-                            color: const Color(0xFF8FD6FF).withOpacity(0.3),
-                            width: 1),
-                      ),
-                      child: Text(
-                        'WED, OCT 24',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF8FD6FF),
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2A2A2A).withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                      child: Text(
-                        'Hypertrophy Advanced',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          color: const Color(0xFFBCC8D1),
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const Spacer(),
-
-                // Workout title
                 Text(
-                  'POSTERIOR CHAIN\nANNIHILATION',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 26,
+                  'Daily Ritual',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11, color: _secondary),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Morning Serenity Flow',
+                  style: GoogleFonts.manrope(
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFFE5E2E1),
-                    letterSpacing: -0.52,
-                    height: 1.05,
+                    color: _onSurface,
                   ),
                 ),
-                const SizedBox(height: 10),
-
-                // Stats + button row
+                const SizedBox(height: 6),
                 Row(
                   children: [
-                    // Stats
-                    Row(
-                      children: [
-                        const Icon(Icons.timer_outlined,
-                            color: Color(0xFF8FD6FF), size: 14),
-                        const SizedBox(width: 4),
-                        Text(
-                          '75 MIN',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF8FD6FF),
-                            letterSpacing: 0.6,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        const Icon(Icons.local_fire_department,
-                            color: Color(0xFFDFC1FF), size: 14),
-                        const SizedBox(width: 4),
-                        Text(
-                          '850 KCAL',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDFC1FF),
-                            letterSpacing: 0.6,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-
-                    // Start Session button
-                    GestureDetector(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Session started! Get ready.',
-                              style: GoogleFonts.plusJakartaSans(fontSize: 13),
-                            ),
-                            backgroundColor: const Color(0xFF00BFFF),
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            margin:
-                                const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 10),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF8FD6FF), Color(0xFF00BFFF)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(9999),
-                        ),
-                        child: Text(
-                          'Start Session',
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF003549),
-                          ),
-                        ),
-                      ),
-                    ),
+                    _chip('25 min'),
+                    const SizedBox(width: 6),
+                    _chip('Full Body'),
+                    const SizedBox(width: 6),
+                    _chip('Low', green: true),
                   ],
                 ),
               ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: _openExercise,
+            child: Container(
+              width: 46,
+              height: 46,
+              decoration: const BoxDecoration(
+                color: _primary,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.play_arrow_rounded,
+                  color: Colors.white, size: 24),
             ),
           ),
         ],
@@ -283,31 +280,168 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
     );
   }
 
-  Widget _programsSection() {
-    final programs = [
+  // ─── Training Split ────────────────────────────────────────────────────────
+
+  Widget _trainingSplit() {
+    final splits = [
+      {'label': 'Push', 'icon': Icons.fitness_center},
+      {'label': 'Pull', 'icon': Icons.self_improvement},
+      {'label': 'Legs', 'icon': Icons.directions_run},
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Training Split',
+          style: GoogleFonts.manrope(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: _onSurface,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: List.generate(splits.length, (i) {
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(right: i < 2 ? 10 : 0),
+                child: GestureDetector(
+                  onTap: _openExercise,
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: _cardBg,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: _outline),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: _primaryContainer.withValues(alpha: 0.45),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            splits[i]['icon'] as IconData,
+                            color: _primary,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          splits[i]['label'] as String,
+                          style: GoogleFonts.manrope(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: _onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          'Functional Focus',
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 10, color: _secondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  // ─── Target Focus ──────────────────────────────────────────────────────────
+
+  Widget _targetFocus() {
+    const categories = [
+      'Chest',
+      'Legs  ·  14 Routines',
+      'Core',
+      'Back',
+      'Upper Body',
+      'Foundational',
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Target Focus',
+          style: GoogleFonts.manrope(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: _onSurface,
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 38,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (_, i) {
+              final isSelected = _selectedCategory == i;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedCategory = i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected ? _primary : _cardBg,
+                    borderRadius: BorderRadius.circular(9999),
+                    border:
+                        Border.all(color: isSelected ? _primary : _outline),
+                  ),
+                  child: Text(
+                    categories[i],
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected ? Colors.white : _secondary,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── New & Notable ─────────────────────────────────────────────────────────
+
+  Widget _newAndNotable() {
+    final workouts = [
       {
-        'badge': 'Strength',
-        'badgeColor': const Color(0xFF8FD6FF),
-        'title': 'Hypertrophy Max',
-        'duration': '12W',
-        'icon': Icons.fitness_center,
-        'desc': 'Maximum muscle fiber recruitment for density gains.',
+        'title': 'Golden Hour Power Sculpt',
+        'duration': '45 min',
+        'tag': 'Advanced Flow',
+        'sub': 'Metabolic endurance',
+        'icon': Icons.bolt,
       },
       {
-        'badge': 'Recovery',
-        'badgeColor': const Color(0xFFDFC1FF),
-        'title': 'Kinetic Flow',
-        'duration': '4W',
-        'icon': Icons.waves,
-        'desc': 'Active recovery and mobility for peak performance.',
+        'title': 'Lunar Mobility Release',
+        'duration': '15 min',
+        'tag': 'Restorative',
+        'sub': 'Tissue relaxation prep',
+        'icon': Icons.bedtime_outlined,
       },
       {
-        'badge': 'Elite',
-        'badgeColor': const Color(0xFFCB9EFF),
-        'title': 'Iron Absolute',
-        'duration': '16W',
-        'icon': Icons.emoji_events,
-        'desc': 'Elite-level programming for advanced athletes.',
+        'title': 'Deep Core Foundations',
+        'duration': '30 min',
+        'tag': 'Stability',
+        'sub': 'Pelvic floor activation',
+        'icon': Icons.accessibility_new,
       },
     ];
 
@@ -318,196 +452,105 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Training Programs',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 18,
+              'New & Notable',
+              style: GoogleFonts.manrope(
+                fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFFE5E2E1),
-                letterSpacing: -0.36,
+                color: _onSurface,
               ),
             ),
-            Text(
-              'View All',
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: const Color(0xFF8FD6FF),
-                letterSpacing: 0.65,
+            GestureDetector(
+              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('All workouts',
+                      style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+                  backgroundColor: _primary,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  duration: const Duration(seconds: 1),
+                ),
+              ),
+              child: Text(
+                'See all',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  color: _primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        ...programs.map((p) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _programCard(p),
-            )),
-      ],
-    );
-  }
-
-  Widget _programCard(Map<String, dynamic> p) {
-    final badgeColor = p['badgeColor'] as Color;
-    return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Opening: ${p['title']}',
-              style: GoogleFonts.plusJakartaSans(fontSize: 13),
-            ),
-            backgroundColor: const Color(0xFF00BFFF),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      },
-      child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1C1B1B),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF00BFFF).withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Icon container
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: badgeColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(p['icon'] as IconData, color: badgeColor, size: 22),
-          ),
-          const SizedBox(width: 14),
-
-          // Text content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+        ...workouts.map(
+          (w) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: GestureDetector(
+              onTap: _openExercise,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _cardBg,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: _outline),
+                ),
+                child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                      width: 50,
+                      height: 50,
                       decoration: BoxDecoration(
-                        color: badgeColor.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(9999),
+                        color: _primaryContainer.withValues(alpha: 0.45),
+                        borderRadius: BorderRadius.circular(14),
                       ),
-                      child: Text(
-                        p['badge'] as String,
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: badgeColor,
-                          letterSpacing: 0.5,
-                        ),
+                      child: Icon(w['icon'] as IconData,
+                          color: _primary, size: 24),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            w['title'] as String,
+                            style: GoogleFonts.manrope(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: _onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              _chip(w['duration'] as String),
+                              const SizedBox(width: 6),
+                              _chip(w['tag'] as String),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            w['sub'] as String,
+                            style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12, color: _secondary),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      p['duration'] as String,
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        color: const Color(0xFFBCC8D1),
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+                    const Icon(Icons.chevron_right,
+                        color: _secondary, size: 20),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  p['title'] as String,
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFE5E2E1),
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  p['desc'] as String,
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    color: const Color(0xFFBCC8D1),
-                    letterSpacing: 0.55,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          const Icon(Icons.arrow_forward_ios,
-              color: Color(0xFFBCC8D1), size: 14),
-        ],
-      ),
-    ),
-    );
-  }
-
-  Widget _metricsRow() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1C1B1B),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _metricItem('42.5 Tons', 'Weekly Volume',
-                const Color(0xFF8FD6FF)),
-          ),
-          Container(
-            width: 1,
-            height: 36,
-            color: const Color(0xFF353534),
-          ),
-          Expanded(
-            child: _metricItem(
-                '92 %', 'Rest Quality', const Color(0xFFDFC1FF)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _metricItem(String value, String label, Color color) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: color,
-            letterSpacing: -0.44,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 11,
-            color: const Color(0xFFBCC8D1),
-            letterSpacing: 0.55,
           ),
         ),
       ],
     );
   }
+
+  // ─── Bottom Nav ────────────────────────────────────────────────────────────
 
   Widget _bottomNav(double bottomPadding) {
     final items = [
@@ -519,13 +562,17 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 8 + bottomPadding),
+      padding: EdgeInsets.fromLTRB(16, 10, 16, 10 + bottomPadding),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1B1B).withOpacity(0.95),
-        border: Border(
-          top: BorderSide(
-              color: const Color(0xFF3D4850).withOpacity(0.3), width: 0.5),
-        ),
+        color: _cardBg,
+        border: Border(top: BorderSide(color: _outline, width: 1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -533,46 +580,55 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           final isActive = _currentNavIndex == index;
           return GestureDetector(
             onTap: () {
-                if (index == 0) {
-                  Navigator.pop(context);
-                  return;
-                }
-                if (index == 2) {
-                  Navigator.pushReplacement(
+              setState(() => _currentNavIndex = index);
+              if (index == 0) {
+                Navigator.popUntil(context, (r) => r.isFirst);
+              } else if (index == 2) {
+                Navigator.pushReplacement(
+                    context, AppRoute(page: const NutritionHubScreen()));
+              } else if (index == 3) {
+                Navigator.pushReplacement(
                     context,
-                    AppRoute(page: const NutritionHubScreen()),
-                  );
-                  return;
-                }
-                if (index == 3) {
-                  Navigator.pushReplacement(
-                    context,
-                    AppRoute(page: const ProgressAnalyticsScreen()),
-                  );
-                  return;
-                }
-                setState(() => _currentNavIndex = index);
-              },
+                    AppRoute(page: const ProgressAnalyticsScreen()));
+              }
+            },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
               decoration: BoxDecoration(
-                color: isActive
-                    ? const Color(0xFF00BFFF).withOpacity(0.12)
-                    : Colors.transparent,
+                color: isActive ? _primaryContainer : Colors.transparent,
                 borderRadius: BorderRadius.circular(9999),
               ),
               child: Icon(
                 items[index],
-                color: isActive
-                    ? const Color(0xFF8FD6FF)
-                    : const Color(0xFF87929B),
-                size: 20,
+                color: isActive ? _primary : _secondary,
+                size: 22,
               ),
             ),
           );
         }),
+      ),
+    );
+  }
+
+  // ─── Helper ────────────────────────────────────────────────────────────────
+
+  Widget _chip(String label, {bool green = false}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: green
+            ? _primaryContainer.withValues(alpha: 0.45)
+            : const Color(0xFFF0F0F0),
+        borderRadius: BorderRadius.circular(9999),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 11,
+          color: green ? _primary : _secondary,
+        ),
       ),
     );
   }
