@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/routes/app_route.dart';
 import '../../workout/screens/workout_library_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -456,8 +457,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (index == 1) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (_) => const WorkoutLibraryScreen()),
+                    AppRoute(page: const WorkoutLibraryScreen()),
                   ).then((_) => setState(() => _currentNavIndex = 0));
                 }
               },
