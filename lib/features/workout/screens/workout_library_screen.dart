@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
+import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
 import 'exercise_detail_screen.dart';
@@ -590,6 +591,9 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                 Navigator.pushReplacement(
                     context,
                     AppRoute(page: const ProgressAnalyticsScreen()));
+              } else if (index == 4) {
+                Navigator.pushReplacement(
+                    context, AppRoute(page: const AiCoachScreen()));
               }
             },
             child: AnimatedContainer(
