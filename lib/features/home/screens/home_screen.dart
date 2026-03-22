@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../workout/screens/workout_library_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -450,7 +451,16 @@ class _HomeScreenState extends State<HomeScreen> {
         children: List.generate(items.length, (index) {
           final isActive = _currentNavIndex == index;
           return GestureDetector(
-            onTap: () => setState(() => _currentNavIndex = index),
+            onTap: () {
+                setState(() => _currentNavIndex = index);
+                if (index == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const WorkoutLibraryScreen()),
+                  );
+                }
+              },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
