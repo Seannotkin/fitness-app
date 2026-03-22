@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
+import '../../../core/services/user_prefs.dart';
 import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
@@ -15,6 +16,28 @@ class NutritionHubScreen extends StatefulWidget {
 
 class _NutritionHubScreenState extends State<NutritionHubScreen> {
   int _currentNavIndex = 1;
+  double _tdee = 2000;
+  Map<String, int> _macros = {'protein': 150, 'carbs': 196, 'fats': 62};
+  List<Map<String, dynamic>> _suggestedMeals = [];
+  bool _showSuggested = true; // true = show dietary-focus suggestions, false = empty log
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final tdee = await UserPrefs.getTdee();
+    final dietaryFocus = await UserPrefs.getDietaryFocus();
+    if (mounted) {
+      setState(() {
+        _tdee = tdee > 0 ? tdee : 2000;
+        _macros = UserPrefs.macrosFromTdee(_tdee);
+        _suggestedMeals = UserPrefs.suggestedMeals(dietaryFocus, _tdee);
+      });
+    }
+  }
 
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
@@ -147,7 +170,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '1,420',
+                      _tdee.round().toString(),
                       style: GoogleFonts.manrope(
                         fontSize: 40,
                         fontWeight: FontWeight.w800,
@@ -160,7 +183,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Text(
-                        'kcal left',
+                        'kcal goal',
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 14,
                           color: Colors.white.withValues(alpha: 0.8),
@@ -183,7 +206,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '980 kcal consumed of 2,400 goal',
+                  'Daily target: ${_tdee.round()} kcal',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10,
                     color: Colors.white.withValues(alpha: 0.7),
@@ -253,7 +276,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
               Expanded(
                 child: _macroChip(
                   'Protein',
-                  '62g',
+                  '${_macros['protein']}g',
                   const Color(0xFF4E6451),
                   const Color(0xFFCFE3D4),
                 ),
@@ -262,7 +285,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
               Expanded(
                 child: _macroChip(
                   'Carbs',
-                  '145g',
+                  '${_macros['carbs']}g',
                   const Color(0xFF7B6B3A),
                   const Color(0xFFF2EAD3),
                 ),
@@ -271,7 +294,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
               Expanded(
                 child: _macroChip(
                   'Fats',
-                  '38g',
+                  '${_macros['fats']}g',
                   const Color(0xFF5B7EA6),
                   const Color(0xFFDCEAF5),
                 ),
@@ -378,31 +401,30 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
         ),
         const SizedBox(height: 14),
 
-        // Breakfast
-        _mealCard(
-          mealType: 'Breakfast',
-          name: 'Morning Berry Oats',
-          calories: '340 kcal',
-          detail: 'Steel cut oats, fresh blueberries, walnuts.',
+        // Meals — populated from user's dietary focus
+        if (_suggestedMeals.isNotEmpty) _mealCard(
+          mealType: _suggestedMeals[0]['meal'] as String,
+          name: _suggestedMeals[0]['name'] as String,
+          calories: '${_suggestedMeals[0]['kcal']} kcal',
+          detail: 'Suggested for your dietary focus · tap to edit',
           icon: Icons.breakfast_dining,
           iconColor: const Color(0xFFBF6A3A),
           iconBg: const Color(0xFFFDE8D8),
-          logged: true,
+          logged: false,
         ),
-        const SizedBox(height: 10),
+        if (_suggestedMeals.isNotEmpty) const SizedBox(height: 10),
 
-        // Lunch
-        _mealCard(
-          mealType: 'Lunch',
-          name: 'Garden Green Salad',
-          calories: '410 kcal',
-          detail: 'Kale, roasted chickpeas, lemon-tahini dressing.',
+        if (_suggestedMeals.length > 1) _mealCard(
+          mealType: _suggestedMeals[1]['meal'] as String,
+          name: _suggestedMeals[1]['name'] as String,
+          calories: '${_suggestedMeals[1]['kcal']} kcal',
+          detail: 'Suggested for your dietary focus · tap to edit',
           icon: Icons.eco,
           iconColor: const Color(0xFF4E6451),
           iconBg: _primaryContainer,
-          logged: true,
+          logged: false,
         ),
-        const SizedBox(height: 10),
+        if (_suggestedMeals.length > 1) const SizedBox(height: 10),
 
         // Dinner — not logged
         _dinnerPending(),
@@ -410,14 +432,14 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
 
         // Snacks
         _mealCard(
-          mealType: 'Snack',
-          name: 'Handful of Almonds',
-          calories: '160 kcal',
-          detail: 'Raw, unsalted almonds (approx. 20 pieces).',
+          mealType: _suggestedMeals.length > 3 ? _suggestedMeals[3]['meal'] as String : 'Snack',
+          name: _suggestedMeals.length > 3 ? _suggestedMeals[3]['name'] as String : 'Add a snack',
+          calories: _suggestedMeals.length > 3 ? '${_suggestedMeals[3]['kcal']} kcal' : '— kcal',
+          detail: 'Suggested for your dietary focus · tap to edit',
           icon: Icons.spa_outlined,
           iconColor: const Color(0xFF7B6B3A),
           iconBg: const Color(0xFFF2EAD3),
-          logged: true,
+          logged: false,
         ),
       ],
     );

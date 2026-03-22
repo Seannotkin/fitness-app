@@ -99,7 +99,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         activityLevel: _activityLevel,
         waterGlasses: _waterGlasses,
         sleepQuality: _sleepQuality,
+        selectedActivities: _selectedActivities,
+        dietaryFocus: _dietaryFocus,
       );
+      await UserPrefs.checkAndUpdateStreak();
       if (mounted) {
         Navigator.of(context).pushReplacement(
           AppRoute(page: const HomeScreen()),

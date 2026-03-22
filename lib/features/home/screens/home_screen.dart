@@ -19,6 +19,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
   int? _selectedMood;
   String _userName = 'Friend';
+  int _intention = 0;
+  double _waterGoalL = 2.0;
+  int _streak = 1;
+  List<String> _activities = [];
 
   @override
   void initState() {
@@ -27,8 +31,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadUser() async {
+    final streak = await UserPrefs.checkAndUpdateStreak();
     final name = await UserPrefs.getName();
-    if (mounted) setState(() => _userName = name);
+    final intention = await UserPrefs.getIntention();
+    final waterGlasses = await UserPrefs.getWaterGlasses();
+    final activities = await UserPrefs.getActivities();
+    if (mounted) {
+      setState(() {
+        _userName = name;
+        _intention = intention;
+        _waterGoalL = UserPrefs.waterLitres(waterGlasses);
+        _streak = streak;
+        _activities = activities;
+      });
+    }
+  }
+
+  String get _formattedDate {
+    final now = DateTime.now();
+    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const months = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+    return '${days[now.weekday - 1]}, ${months[now.month]} ${now.day}';
+  }
+
+  String get _greetingPrefix {
+    final h = DateTime.now().hour;
+    if (h < 12) return 'Good morning';
+    if (h < 17) return 'Good afternoon';
+    return 'Good evening';
   }
 
   static const _bg = Color(0xFFFBFAF8);
@@ -38,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _textSecondary = Color(0xFF5A605C);
   static const _cardBg = Color(0xFFFFFFFF);
   static const _outline = Color(0xFFE1E3E3);
-  static const _surfaceVariant = Color(0xFFE8F0EA);
+  
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Good morning, $_userName',
+                '$_greetingPrefix, $_userName',
                 style: GoogleFonts.manrope(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -117,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 2),
               Text(
-                'Monday, October 24',
+                _formattedDate,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   color: _textSecondary,
@@ -139,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: _primary, size: 12),
                     const SizedBox(width: 4),
                     Text(
-                      '75% Goal Reached',
+                      '🔥 $_streak Day Streak · ${UserPrefs.intentionLabels[_intention.clamp(0,3)]}',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -206,86 +236,12 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 18),
 
           // Steps
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: _primaryContainer,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.directions_walk,
-                    color: _primary, size: 18),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '8,432',
-                              style: GoogleFonts.manrope(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
-                                color: _primary,
-                                letterSpacing: -0.44,
-                                height: 1,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 2),
-                              child: Text(
-                                '/ 10,000 steps',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 11,
-                                  color: _textSecondary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '84%',
-                          style: GoogleFonts.manrope(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: _primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(9999),
-                      child: const LinearProgressIndicator(
-                        value: 0.84,
-                        backgroundColor: _surfaceVariant,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(_primary),
-                        minHeight: 6,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '+1,200 vs yesterday',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 10,
-                        color: const Color(0xFF4E8C5A),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          _notSyncedMetricRow(
+            icon: Icons.directions_walk,
+            iconBg: _primaryContainer,
+            iconColor: _primary,
+            label: 'Steps',
+            hint: 'Connect device to track',
           ),
 
           const SizedBox(height: 16),
@@ -293,86 +249,12 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 16),
 
           // Activity Calories
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFDE8D8),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.local_fire_department,
-                    color: Color(0xFFBF6A3A), size: 18),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '1,240',
-                              style: GoogleFonts.manrope(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
-                                color: const Color(0xFFBF6A3A),
-                                letterSpacing: -0.44,
-                                height: 1,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 2),
-                              child: Text(
-                                'kcal',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 11,
-                                  color: _textSecondary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '70%',
-                          style: GoogleFonts.manrope(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFFBF6A3A),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(9999),
-                      child: const LinearProgressIndicator(
-                        value: 0.70,
-                        backgroundColor: Color(0xFFFDE8D8),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(0xFFBF6A3A)),
-                        minHeight: 6,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Active: 42m',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 10,
-                        color: _textSecondary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          _notSyncedMetricRow(
+            icon: Icons.local_fire_department,
+            iconBg: const Color(0xFFFDE8D8),
+            iconColor: const Color(0xFFBF6A3A),
+            label: 'Active Calories',
+            hint: 'Connect device to track',
           ),
 
           const SizedBox(height: 16),
@@ -386,8 +268,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   iconColor: const Color(0xFF5B7EA6),
                   iconBg: const Color(0xFFDCEAF5),
                   label: 'Rest',
-                  value: '8.5h',
-                  valueColor: const Color(0xFF5B7EA6),
+                  value: 'Not synced',
+                  valueColor: _textSecondary,
                 ),
               ),
               const SizedBox(width: 10),
@@ -397,8 +279,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   iconColor: const Color(0xFF9B5E82),
                   iconBg: const Color(0xFFF2DFF0),
                   label: 'HRV',
-                  value: '64ms',
-                  valueColor: const Color(0xFF9B5E82),
+                  value: 'Not synced',
+                  valueColor: _textSecondary,
                 ),
               ),
             ],
@@ -459,6 +341,48 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _notSyncedMetricRow({
+    required IconData icon,
+    required Color iconBg,
+    required Color iconColor,
+    required String label,
+    required String hint,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(10)),
+          child: Icon(icon, color: iconColor, size: 18),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: GoogleFonts.plusJakartaSans(fontSize: 12, color: _textSecondary)),
+              const SizedBox(height: 2),
+              Text(
+                'Not synced',
+                style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w700, color: _textSecondary),
+              ),
+              Text(hint, style: GoogleFonts.plusJakartaSans(fontSize: 10, color: _textSecondary.withValues(alpha: 0.6))),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            border: Border.all(color: _outline),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text('Sync', style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w600, color: _textSecondary)),
+        ),
+      ],
     );
   }
 
@@ -528,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(9999),
                     ),
                     child: Text(
-                      'Suggested Low Impact',
+                      UserPrefs.intentionLabels[_intention.clamp(0, 3)],
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 9,
                         fontWeight: FontWeight.w600,
@@ -539,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Morning Mobility\n& Breathwork',
+                    _activities.isNotEmpty ? '${_activities.first} Session' : 'Morning Mobility\n& Breathwork',
                     style: GoogleFonts.manrope(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -594,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      setState(() => _currentNavIndex = 1);
+                      setState(() => _currentNavIndex = 2);
                       Navigator.push(
                         context,
                         AppRoute(page: const WorkoutLibraryScreen()),
@@ -675,7 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '1.8',
+                '0',
                 style: GoogleFonts.manrope(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
@@ -687,7 +611,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 2),
                 child: Text(
-                  '/2.5L',
+                  '/ ${_waterGoalL.toStringAsFixed(1)}L',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: _textSecondary,
@@ -700,7 +624,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(9999),
             child: const LinearProgressIndicator(
-              value: 0.72,
+              value: 0.0,
               backgroundColor: Color(0xFFD6EAF8),
               valueColor:
                   AlwaysStoppedAnimation<Color>(Color(0xFF2E86C1)),
@@ -709,7 +633,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            '72% · 700ml to go',
+            'Goal: ${_waterGoalL.toStringAsFixed(1)}L · Not synced',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 10,
               color: _textSecondary,
@@ -759,12 +683,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 2),
           Text(
-            '7h 45m',
+            'Not synced',
             style: GoogleFonts.manrope(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF6A1B9A),
-              letterSpacing: -0.44,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: _textSecondary,
               height: 1,
             ),
           ),
@@ -777,7 +700,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(9999),
             ),
             child: Text(
-              'Great Quality  88/100',
+              'Connect device to track',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 9,
                 fontWeight: FontWeight.w600,

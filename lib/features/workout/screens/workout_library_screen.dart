@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
+import '../../../core/services/user_prefs.dart';
 import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
@@ -16,6 +17,10 @@ class WorkoutLibraryScreen extends StatefulWidget {
 class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
   int _currentNavIndex = 2;
   int _selectedCategory = 0;
+  int _intention = 0;
+  int _activityLevel = 2;
+  List<String> _activities = [];
+  List<Map<String, String>> _suggestedWorkouts = [];
 
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
@@ -24,6 +29,26 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
   static const _secondary = Color(0xFF5A605C);
   static const _cardBg = Color(0xFFFFFFFF);
   static const _outline = Color(0xFFE1E3E3);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final intention = await UserPrefs.getIntention();
+    final activityLevel = await UserPrefs.getActivityLevel();
+    final activities = await UserPrefs.getActivities();
+    if (mounted) {
+      setState(() {
+        _intention = intention;
+        _activityLevel = activityLevel;
+        _activities = activities;
+        _suggestedWorkouts = UserPrefs.suggestedWorkouts(activities, intention, activityLevel);
+      });
+    }
+  }
 
   void _openExercise() {
     Navigator.push(context, AppRoute(page: const ExerciseDetailScreen()));
@@ -161,7 +186,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Strength in Stillness',
+            UserPrefs.programName(_intention),
             style: GoogleFonts.manrope(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -170,7 +195,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Focusing on functional foundations and mindful muscle engagement',
+            UserPrefs.intentionMessage(_intention),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               color: Colors.white.withValues(alpha: 0.78),
@@ -242,7 +267,9 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Morning Serenity Flow',
+                  _suggestedWorkouts.isNotEmpty
+                      ? _suggestedWorkouts.first['name']!
+                      : 'Morning Flow Session',
                   style: GoogleFonts.manrope(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -252,11 +279,11 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    _chip('25 min'),
+                    _chip(_suggestedWorkouts.isNotEmpty ? _suggestedWorkouts.first['duration']! : '30 min'),
                     const SizedBox(width: 6),
-                    _chip('Full Body'),
+                    _chip(_activities.isNotEmpty ? _activities.first : 'Full Body'),
                     const SizedBox(width: 6),
-                    _chip('Low', green: true),
+                    _chip(_suggestedWorkouts.isNotEmpty ? _suggestedWorkouts.first['intensity']! : 'Moderate', green: true),
                   ],
                 ),
               ],

@@ -25,6 +25,9 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
   int _currentNavIndex = 4;
   int _selectedTab = 2; // Coach tab default
   String _userName = 'Friend';
+  int _intention = 0;
+  double _tdee = 2000;
+  int _streak = 1;
 
   @override
   void initState() {
@@ -34,7 +37,17 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
 
   Future<void> _loadUser() async {
     final name = await UserPrefs.getName();
-    if (mounted) setState(() => _userName = name);
+    final intention = await UserPrefs.getIntention();
+    final tdee = await UserPrefs.getTdee();
+    final streak = await UserPrefs.getStreak();
+    if (mounted) {
+      setState(() {
+        _userName = name;
+        _intention = intention;
+        _tdee = tdee > 0 ? tdee : 2000;
+        _streak = streak;
+      });
+    }
   }
 
   final _messageController = TextEditingController();
@@ -307,7 +320,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Today is for steady grounding',
+            UserPrefs.intentionMessage(_intention),
             style: GoogleFonts.manrope(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -579,7 +592,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                '14 Days',
+                '$_streak Days',
                 style: GoogleFonts.manrope(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -587,7 +600,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
                 ),
               ),
               Text(
-                'Grounded',
+                'Streak',
                 style: GoogleFonts.plusJakartaSans(
                     fontSize: 10, color: _secondary),
               ),
@@ -654,7 +667,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
                   borderRadius: BorderRadius.circular(9999),
                 ),
                 child: Text(
-                  '840 kcal remaining',
+                  '${_tdee.round()} kcal goal',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: _primary,

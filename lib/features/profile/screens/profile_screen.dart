@@ -26,9 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   static const _surfaceVariant = Color(0xFFE8F0EA);
 
   final TextEditingController _reflectionCtrl = TextEditingController();
+  final TextEditingController _bioCtrl = TextEditingController();
   int _currentNavIndex = -1;
   String _userName = 'Friend';
   String _userInitials = 'F';
+  String _memberSince = '';
+  int _streak = 1;
+  bool _editingBio = false;
+  bool _bioIsCustom = false;
 
   @override
   void initState() {
@@ -38,9 +43,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUser() async {
     final name = await UserPrefs.getName();
+    final memberSince = await UserPrefs.getFirstLaunchDate();
+    final streak = await UserPrefs.getStreak();
+    final bio = await UserPrefs.getBio();
+    final bioIsCustom = await UserPrefs.isBioCustom();
     if (mounted) {
       setState(() {
         _userName = name;
+        _memberSince = memberSince;
+        _streak = streak;
+        _bioCtrl.text = bio;
+        _bioIsCustom = bioIsCustom;
         final parts = name.trim().split(' ');
         _userInitials = parts.length >= 2
             ? '${parts[0][0]}${parts[1][0]}'.toUpperCase()
@@ -52,6 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     _reflectionCtrl.dispose();
+    _bioCtrl.dispose();
     super.dispose();
   }
 
@@ -192,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Member since 2023',
+                      'Member since $_memberSince',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
                         color: _textSecondary,
@@ -229,22 +243,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          Text(
-            'Finding stillness in the city. Dedicated to mindful movement and deep restoration. Believer in the power of consistency over intensity.',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              color: _textSecondary,
-              height: 1.6,
-            ),
-          ),
+          _editingBio
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: _bioCtrl,
+                      maxLines: 3,
+                      style: GoogleFonts.plusJakartaSans(fontSize: 13, color: _textPrimary, height: 1.6),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: _bg,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: _outline)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: _outline)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: _primary, width: 1.5)),
+                        contentPadding: const EdgeInsets.all(12),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            await UserPrefs.saveBio(_bioCtrl.text, isCustom: true);
+                            setState(() { _editingBio = false; _bioIsCustom = true; });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                            decoration: BoxDecoration(color: _primary, borderRadius: BorderRadius.circular(20)),
+                            child: Text('Save', style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (_bioIsCustom)
+                          GestureDetector(
+                            onTap: () async {
+                              await UserPrefs.resetBioToGenerated();
+                              final bio = await UserPrefs.getBio();
+                              setState(() { _bioCtrl.text = bio; _bioIsCustom = false; _editingBio = false; });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              decoration: BoxDecoration(border: Border.all(color: _outline), borderRadius: BorderRadius.circular(20)),
+                              child: Text('Reset to auto', style: GoogleFonts.plusJakartaSans(fontSize: 12, color: _textSecondary)),
+                            ),
+                          ),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () => setState(() => _editingBio = false),
+                          child: Text('Cancel', style: GoogleFonts.plusJakartaSans(fontSize: 12, color: _textSecondary)),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : GestureDetector(
+                  onTap: () => setState(() => _editingBio = true),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _bioCtrl.text.isEmpty ? 'Tap to add your bio...' : _bioCtrl.text,
+                          style: GoogleFonts.plusJakartaSans(fontSize: 13, color: _bioCtrl.text.isEmpty ? _textSecondary.withValues(alpha: 0.5) : _textSecondary, height: 1.6),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.edit_outlined, size: 14, color: _textSecondary.withValues(alpha: 0.5)),
+                    ],
+                  ),
+                ),
           const SizedBox(height: 16),
           Row(
             children: [
-              _statChip(Icons.favorite_outline_rounded, '127', 'Sessions'),
+              _statChip(Icons.local_fire_department_outlined, '$_streak', 'Day Streak'),
               const SizedBox(width: 8),
-              _statChip(Icons.local_fire_department_outlined, '12', 'Day Streak'),
+              _statChip(Icons.directions_walk_rounded, '—', 'Steps Today'),
               const SizedBox(width: 8),
-              _statChip(Icons.star_outline_rounded, '8', 'Goals Met'),
+              _statChip(Icons.monitor_heart_outlined, '—', 'HRV'),
             ],
           ),
         ],
@@ -307,14 +383,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisSpacing: 12,
           childAspectRatio: 1.7,
           children: [
-            _metricCard(Icons.local_fire_department_outlined, 'Current Streak', '12 Days', null),
-            _metricCard(Icons.directions_walk_rounded, 'Steps', '8,432', null),
-            _metricCard(Icons.monitor_heart_outlined, 'HRV', '64ms', 'Balanced recovery'),
-            _metricCard(Icons.bedtime_outlined, 'Sleep', '7h 20m', '82% Quality'),
+            _metricCard(Icons.local_fire_department_outlined, 'Current Streak', '$_streak Days', null),
+            _metricCard(Icons.directions_walk_rounded, 'Steps', 'Not synced', null),
+            _metricCard(Icons.monitor_heart_outlined, 'HRV', 'Not synced', null),
+            _metricCard(Icons.bedtime_outlined, 'Sleep', 'Not synced', null),
           ],
         ),
         const SizedBox(height: 12),
-        _metricCardWide(Icons.timer_outlined, 'Active Time', '45 min', 'Today'),
+        _metricCardWide(Icons.timer_outlined, 'Active Time', 'Not synced', 'Connect device'),
       ],
     );
   }
