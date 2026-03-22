@@ -458,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (_) => const WorkoutLibraryScreen()),
-                  );
+                  ).then((_) => setState(() => _currentNavIndex = 0));
                 }
               },
             child: AnimatedContainer(

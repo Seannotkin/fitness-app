@@ -231,23 +231,26 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                     const Spacer(),
 
                     // Start Session button
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 10),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF8FD6FF), Color(0xFF00BFFF)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 10),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF8FD6FF), Color(0xFF00BFFF)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(9999),
                         ),
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                      child: Text(
-                        'Start Session',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF003549),
+                        child: Text(
+                          'Start Session',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF003549),
+                          ),
                         ),
                       ),
                     ),
@@ -325,7 +328,9 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
 
   Widget _programCard(Map<String, dynamic> p) {
     final badgeColor = p['badgeColor'] as Color;
-    return Container(
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1B1B),
@@ -414,6 +419,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
               color: Color(0xFFBCC8D1), size: 14),
         ],
       ),
+    ),
     );
   }
 
