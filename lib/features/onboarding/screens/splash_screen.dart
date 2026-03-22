@@ -37,9 +37,9 @@ class SplashScreen extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.04),
-                  Colors.white.withOpacity(0.10),
-                  Colors.white.withOpacity(0.22),
+                  Colors.white.withValues(alpha: 0.04),
+                  Colors.white.withValues(alpha: 0.10),
+                  Colors.white.withValues(alpha: 0.22),
                 ],
               ),
             ),
@@ -53,7 +53,7 @@ class SplashScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.white.withOpacity(0.08),
+                    Colors.white.withValues(alpha: 0.08),
                     Colors.transparent,
                   ],
                 ),
@@ -93,10 +93,10 @@ class SplashScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(32),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.14),
+                          color: Colors.white.withValues(alpha: 0.14),
                           borderRadius: BorderRadius.circular(28),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.22),
+                            color: Colors.white.withValues(alpha: 0.22),
                             width: 1,
                           ),
                         ),
@@ -118,7 +118,7 @@ class SplashScreen extends StatelessWidget {
                               'Your journey to a more balanced and intentional life starts with a single, mindful step.',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 15,
-                                color: Colors.white.withOpacity(0.82),
+                                color: Colors.white.withValues(alpha: 0.82),
                                 height: 1.65,
                               ),
                             ),
@@ -165,7 +165,7 @@ class SplashScreen extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 12,
-                                  color: Colors.white.withOpacity(0.60),
+                                  color: Colors.white.withValues(alpha: 0.60),
                                   height: 1.4,
                                 ),
                               ),

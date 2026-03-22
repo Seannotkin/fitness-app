@@ -63,14 +63,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _tdee = bmr * 1.55;
         _calculated = true;
       });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Please fill in age, height, and weight first.',
+            style: GoogleFonts.plusJakartaSans(fontSize: 13),
+          ),
+          backgroundColor: _primary,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        ),
+      );
     }
   }
 
   void _next() {
+    FocusScope.of(context).unfocus();
     if (_page < 4) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeOutCubic,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOutCubic,
       );
     } else {
       Navigator.of(context).pushReplacement(
@@ -80,10 +95,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _back() {
+    FocusScope.of(context).unfocus();
     if (_page > 0) {
       _pageController.previousPage(
-        duration: const Duration(milliseconds: 280),
-        curve: Curves.easeOutCubic,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
       );
     } else {
       Navigator.of(context).pop();
@@ -92,7 +108,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
       backgroundColor: _bg,
       body: SafeArea(
         child: Column(
@@ -127,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     borderRadius: BorderRadius.circular(9999),
                     child: LinearProgressIndicator(
                       value: (_page + 1) / 5,
-                      backgroundColor: _primaryContainer.withOpacity(0.35),
+                      backgroundColor: _primaryContainer.withValues(alpha: 0.35),
                       valueColor:
                           const AlwaysStoppedAnimation<Color>(_primary),
                       minHeight: 5,
@@ -239,6 +257,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -344,7 +363,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: selected
-                      ? _primaryContainer.withOpacity(0.38)
+                      ? _primaryContainer.withValues(alpha: 0.38)
                       : Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
@@ -487,7 +506,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: _primaryContainer.withOpacity(0.32),
+                color: _primaryContainer.withValues(alpha: 0.32),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: _primaryContainer),
               ),
@@ -653,7 +672,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     horizontal: 16, vertical: 13),
                 decoration: BoxDecoration(
                   color: selected
-                      ? _primaryContainer.withOpacity(0.38)
+                      ? _primaryContainer.withValues(alpha: 0.38)
                       : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
@@ -722,7 +741,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
                     color: active
-                        ? _primaryContainer.withOpacity(0.45)
+                        ? _primaryContainer.withValues(alpha: 0.45)
                         : Colors.white,
                     borderRadius: BorderRadius.circular(9999),
                     border: Border.all(
@@ -757,7 +776,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _primaryContainer.withOpacity(0.22),
+              color: _primaryContainer.withValues(alpha: 0.22),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Text(
@@ -922,7 +941,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
                     color: active
-                        ? _primaryContainer.withOpacity(0.45)
+                        ? _primaryContainer.withValues(alpha: 0.45)
                         : Colors.white,
                     borderRadius: BorderRadius.circular(9999),
                     border: Border.all(
@@ -1000,7 +1019,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: _primaryContainer.withOpacity(0.5),
+              color: _primaryContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(9999),
             ),
             child: Row(
@@ -1056,7 +1075,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: _primaryContainer.withOpacity(0.45),
+                        color: _primaryContainer.withValues(alpha: 0.45),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.local_fire_department,
@@ -1141,7 +1160,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   '12-Week Foundation Program',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
-                    color: Colors.white.withOpacity(0.72),
+                    color: Colors.white.withValues(alpha: 0.72),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -1159,7 +1178,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   'Low-impact program emphasizing functional strength and mindful movement — designed to build sustainable foundations.',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.78),
+                    color: Colors.white.withValues(alpha: 0.78),
                     height: 1.55,
                   ),
                 ),
@@ -1176,7 +1195,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: _primaryContainer.withOpacity(0.22),
+        color: _primaryContainer.withValues(alpha: 0.22),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -1212,7 +1231,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding:
           const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.16),
+        color: Colors.white.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(9999),
       ),
       child: Text(
