@@ -101,7 +101,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
                 shape: BoxShape.circle,
                 color: _primaryContainer,
                 border: Border.all(
-                    color: _primary.withOpacity(0.3), width: 1.5),
+                    color: _primary.withValues(alpha: 0.3), width: 1.5),
               ),
               child: const Icon(Icons.person, color: _primary, size: 22),
             ),
@@ -148,7 +148,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -360,7 +360,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -385,7 +385,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.12),
+                  color: statusColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(9999),
                 ),
                 child: Text(
@@ -444,7 +444,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -562,7 +562,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
             label,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 9,
-              color: textColor.withOpacity(0.7),
+              color: textColor.withValues(alpha: 0.7),
               letterSpacing: 0.2,
             ),
           ),
@@ -585,7 +585,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
             unit,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 10,
-              color: textColor.withOpacity(0.65),
+              color: textColor.withValues(alpha: 0.65),
             ),
           ),
         ],
@@ -633,7 +633,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -755,7 +755,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         gradient: LinearGradient(
           colors: [
             _primary,
-            _primary.withOpacity(0.80),
+            _primary.withValues(alpha: 0.80),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -763,7 +763,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: _primary.withOpacity(0.3),
+            color: _primary.withValues(alpha: 0.3),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
@@ -792,7 +792,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
                       'Path Ahead',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
-                        color: Colors.white.withOpacity(0.65),
+                        color: Colors.white.withValues(alpha: 0.65),
                       ),
                     ),
                   ],
@@ -808,7 +808,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
                     CircularProgressIndicator(
                       value: 0.82,
                       strokeWidth: 6,
-                      backgroundColor: Colors.white.withOpacity(0.2),
+                      backgroundColor: Colors.white.withValues(alpha: 0.2),
                       valueColor: const AlwaysStoppedAnimation<Color>(
                           Colors.white),
                     ),
@@ -829,7 +829,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
                           'Lv.08',
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 9,
-                            color: Colors.white.withOpacity(0.75),
+                            color: Colors.white.withValues(alpha: 0.75),
                           ),
                         ),
                       ],
@@ -844,7 +844,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
             '4 mindful sessions away from reaching your next plateau.',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               height: 1.5,
             ),
           ),
@@ -889,7 +889,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
               sub,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 10,
-                color: Colors.white.withOpacity(0.55),
+                color: Colors.white.withValues(alpha: 0.55),
               ),
             ),
           ],
@@ -981,14 +981,14 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         color: locked ? const Color(0xFFF7F6F5) : _cardBg,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: locked ? _outline : color.withOpacity(0.2),
+          color: locked ? _outline : color.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: locked
             ? []
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 3),
                 ),
@@ -1061,7 +1061,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         border: const Border(top: BorderSide(color: _outline, width: 1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),

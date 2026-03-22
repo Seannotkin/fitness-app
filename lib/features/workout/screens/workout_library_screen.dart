@@ -14,7 +14,7 @@ class WorkoutLibraryScreen extends StatefulWidget {
 }
 
 class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
-  int _currentNavIndex = 1;
+  int _currentNavIndex = 2;
   int _selectedCategory = 0;
 
   static const _bg = Color(0xFFFBFAF8);
@@ -584,9 +584,11 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
               setState(() => _currentNavIndex = index);
               if (index == 0) {
                 Navigator.popUntil(context, (r) => r.isFirst);
-              } else if (index == 2) {
+              } else if (index == 1) {
                 Navigator.pushReplacement(
                     context, AppRoute(page: const NutritionHubScreen()));
+              } else if (index == 2) {
+                // already on Workout
               } else if (index == 3) {
                 Navigator.pushReplacement(
                     context,

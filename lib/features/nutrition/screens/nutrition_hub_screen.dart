@@ -14,7 +14,7 @@ class NutritionHubScreen extends StatefulWidget {
 }
 
 class _NutritionHubScreenState extends State<NutritionHubScreen> {
-  int _currentNavIndex = 2;
+  int _currentNavIndex = 1;
 
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
@@ -73,7 +73,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: _primaryContainer,
-            border: Border.all(color: _primary.withOpacity(0.3), width: 1.5),
+            border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
           ),
           child: const Icon(Icons.person, color: _primary, size: 22),
         ),
@@ -114,7 +114,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
         gradient: LinearGradient(
           colors: [
             _primary,
-            _primary.withOpacity(0.80),
+            _primary.withValues(alpha: 0.80),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -122,7 +122,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: _primary.withOpacity(0.28),
+            color: _primary.withValues(alpha: 0.28),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
@@ -138,7 +138,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                   'Daily Calories',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.75),
+                    color: Colors.white.withValues(alpha: 0.75),
                     letterSpacing: 0.2,
                   ),
                 ),
@@ -163,7 +163,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                         'kcal left',
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           letterSpacing: 0.1,
                         ),
                       ),
@@ -175,7 +175,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                   borderRadius: BorderRadius.circular(9999),
                   child: LinearProgressIndicator(
                     value: 0.42,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     valueColor:
                         const AlwaysStoppedAnimation<Color>(Colors.white),
                     minHeight: 5,
@@ -186,7 +186,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                   '980 kcal consumed of 2,400 goal',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     letterSpacing: 0.1,
                   ),
                 ),
@@ -197,7 +197,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(
@@ -217,7 +217,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
       decoration: BoxDecoration(
         color: _surfaceVariant,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _primary.withOpacity(0.12), width: 1),
+        border: Border.all(color: _primary.withValues(alpha: 0.12), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,7 +298,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
             label,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 10,
-              color: textColor.withOpacity(0.75),
+              color: textColor.withValues(alpha: 0.75),
               letterSpacing: 0.2,
             ),
           ),
@@ -445,7 +445,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 3),
           ),
@@ -623,7 +623,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
         border: Border.all(color: _outline, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -690,7 +690,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
         border: const Border(top: BorderSide(color: _outline, width: 1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),
@@ -706,7 +706,8 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                 Navigator.popUntil(context, (route) => route.isFirst);
                 return;
               }
-              if (index == 1) {
+              if (index == 1) return; // already on Nutrition
+              if (index == 2) {
                 Navigator.pushReplacement(
                   context,
                   AppRoute(page: const WorkoutLibraryScreen()),

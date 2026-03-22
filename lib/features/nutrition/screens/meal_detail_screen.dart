@@ -81,7 +81,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.07),
+                    color: Colors.black.withValues(alpha: 0.07),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -136,7 +136,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: _primary.withOpacity(0.28),
+            color: _primary.withValues(alpha: 0.28),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -152,7 +152,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               height: 150,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.07),
+                color: Colors.white.withValues(alpha: 0.07),
               ),
             ),
           ),
@@ -164,7 +164,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               height: 110,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -176,7 +176,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   width: 88,
                   height: 88,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.18),
+                    color: Colors.white.withValues(alpha: 0.18),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -190,7 +190,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   'Dinner Choice',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
                   ),
@@ -281,7 +281,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [_primary, _primary.withOpacity(0.85)],
+              colors: [_primary, _primary.withValues(alpha: 0.85)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -296,7 +296,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     'Energy',
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 11,
-                      color: Colors.white.withOpacity(0.75),
+                      color: Colors.white.withValues(alpha: 0.75),
                       letterSpacing: 0.2,
                     ),
                   ),
@@ -355,7 +355,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             label,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 10,
-              color: textColor.withOpacity(0.7),
+              color: textColor.withValues(alpha: 0.7),
               letterSpacing: 0.2,
             ),
           ),
@@ -505,7 +505,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
         color: const Color(0xFFFFF8E1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-            color: const Color(0xFFE6A817).withOpacity(0.25), width: 1),
+            color: const Color(0xFFE6A817).withValues(alpha: 0.25), width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -539,7 +539,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   'For maximum nutrient absorption, lightly zest a fresh lemon over the greens just before serving. Vitamin C enhances iron absorption from spring greens.',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
-                    color: const Color(0xFF7A5A00).withOpacity(0.85),
+                    color: const Color(0xFF7A5A00).withValues(alpha: 0.85),
                     height: 1.55,
                     letterSpacing: 0.1,
                   ),
@@ -573,7 +573,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 borderRadius: BorderRadius.circular(9999),
                 boxShadow: [
                   BoxShadow(
-                    color: _primary.withOpacity(0.3),
+                    color: _primary.withValues(alpha: 0.3),
                     blurRadius: 14,
                     offset: const Offset(0, 5),
                   ),
