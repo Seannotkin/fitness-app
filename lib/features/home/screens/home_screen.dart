@@ -5,6 +5,8 @@ import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
+import '../../profile/screens/profile_screen.dart';
+import '../../../core/services/user_prefs.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +18,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
   int? _selectedMood;
+  String _userName = 'Friend';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final name = await UserPrefs.getName();
+    if (mounted) setState(() => _userName = name);
+  }
 
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
@@ -74,15 +88,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _primaryContainer,
-            border: Border.all(color: _primary.withOpacity(0.3), width: 1.5),
+        GestureDetector(
+          onTap: () => Navigator.of(context).push(AppRoute(page: const ProfileScreen())),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _primaryContainer,
+              border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
+            ),
+            child: const Icon(Icons.person, color: _primary, size: 22),
           ),
-          child: const Icon(Icons.person, color: _primary, size: 22),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -90,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Good morning, Sage',
+                'Good morning, $_userName',
                 style: GoogleFonts.manrope(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,

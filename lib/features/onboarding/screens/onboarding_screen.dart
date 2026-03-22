@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
+import '../../../core/services/user_prefs.dart';
 import '../../home/screens/home_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -80,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
-  void _next() {
+  void _next() async {
     FocusScope.of(context).unfocus();
     if (_page < 4) {
       _pageController.nextPage(
@@ -88,9 +89,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOutCubic,
       );
     } else {
-      Navigator.of(context).pushReplacement(
-        AppRoute(page: const HomeScreen()),
+      await UserPrefs.saveOnboarding(
+        name: _nameController.text,
+        intention: _intention,
+        age: _ageController.text,
+        height: _heightController.text,
+        weight: _weightController.text,
+        tdee: _tdee,
+        activityLevel: _activityLevel,
+        waterGlasses: _waterGlasses,
+        sleepQuality: _sleepQuality,
       );
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          AppRoute(page: const HomeScreen()),
+        );
+      }
     }
   }
 

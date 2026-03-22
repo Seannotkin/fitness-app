@@ -4,6 +4,7 @@ import '../../../core/routes/app_route.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
+import '../../../core/services/user_prefs.dart';
 
 class AiCoachScreen extends StatefulWidget {
   const AiCoachScreen({super.key});
@@ -23,6 +24,18 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
 
   int _currentNavIndex = 4;
   int _selectedTab = 2; // Coach tab default
+  String _userName = 'Friend';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final name = await UserPrefs.getName();
+    if (mounted) setState(() => _userName = name);
+  }
 
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
@@ -148,7 +161,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Good morning, Julianne',
+                  'Good morning, $_userName',
                   style: GoogleFonts.manrope(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,

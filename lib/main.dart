@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'core/services/user_prefs.dart';
+import 'features/home/screens/home_screen.dart';
 import 'features/onboarding/screens/splash_screen.dart';
 
 void main() async {
@@ -12,11 +14,13 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
-  runApp(const FitnessApp());
+  final onboardingDone = await UserPrefs.isOnboardingDone();
+  runApp(FitnessApp(skipOnboarding: onboardingDone));
 }
 
 class FitnessApp extends StatelessWidget {
-  const FitnessApp({super.key});
+  final bool skipOnboarding;
+  const FitnessApp({super.key, required this.skipOnboarding});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class FitnessApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF131313),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: skipOnboarding ? const HomeScreen() : const SplashScreen(),
     );
   }
 }
