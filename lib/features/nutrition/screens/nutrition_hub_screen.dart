@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
+import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
 
 class NutritionHubScreen extends StatefulWidget {
@@ -666,6 +667,13 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                 Navigator.pushReplacement(
                   context,
                   AppRoute(page: const WorkoutLibraryScreen()),
+                );
+                return;
+              }
+              if (index == 3) {
+                Navigator.pushReplacement(
+                  context,
+                  AppRoute(page: const ProgressAnalyticsScreen()),
                 );
                 return;
               }
