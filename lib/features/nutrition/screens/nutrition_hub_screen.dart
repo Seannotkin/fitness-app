@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
+import 'meal_detail_screen.dart';
 
 class NutritionHubScreen extends StatefulWidget {
   const NutritionHubScreen({super.key});
@@ -428,7 +429,12 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
     required Color iconBg,
     required bool logged,
   }) {
-    return Container(
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        AppRoute(page: const MealDetailScreen()),
+      ),
+      child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: _cardBg,
@@ -514,6 +520,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 
