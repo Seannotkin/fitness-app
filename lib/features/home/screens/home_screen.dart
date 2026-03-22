@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
+import '../../nutrition/screens/nutrition_hub_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -458,6 +459,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     AppRoute(page: const WorkoutLibraryScreen()),
+                  ).then((_) => setState(() => _currentNavIndex = 0));
+                } else if (index == 2) {
+                  Navigator.push(
+                    context,
+                    AppRoute(page: const NutritionHubScreen()),
                   ).then((_) => setState(() => _currentNavIndex = 0));
                 }
               },

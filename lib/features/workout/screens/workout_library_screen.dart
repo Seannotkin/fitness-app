@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/routes/app_route.dart';
+import '../../nutrition/screens/nutrition_hub_screen.dart';
 
 class WorkoutLibraryScreen extends StatefulWidget {
   const WorkoutLibraryScreen({super.key});
@@ -501,6 +503,13 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
             onTap: () {
                 if (index == 0) {
                   Navigator.pop(context);
+                  return;
+                }
+                if (index == 2) {
+                  Navigator.pushReplacement(
+                    context,
+                    AppRoute(page: const NutritionHubScreen()),
+                  );
                   return;
                 }
                 setState(() => _currentNavIndex = index);
