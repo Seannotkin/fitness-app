@@ -16,27 +16,27 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF131313),
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _header(),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 14),
                     _energyCard(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _actionButtons(),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 16),
                     _sectionHeader('Next Session', 'View Schedule'),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     _nextSessionCard(),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 16),
                     _sectionHeader('Daily Milestones', null),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             0.84,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: _milestoneCard(
                             Icons.water_drop,
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 12),
                   ],
                 ),
               ),
@@ -79,41 +79,39 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 34,
+              height: 34,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: const Color(0xFF2A2A2A),
                 border: Border.all(
                     color: const Color(0xFF8FD6FF).withOpacity(0.3), width: 1),
               ),
-              child: const Icon(Icons.person,
-                  color: Color(0xFF8FD6FF), size: 20),
+              child: const Icon(Icons.person, color: Color(0xFF8FD6FF), size: 17),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             Text(
               'NEON LAB',
               style: GoogleFonts.spaceGrotesk(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: const Color(0xFF8FD6FF),
-                letterSpacing: -0.36,
+                letterSpacing: -0.32,
               ),
             ),
           ],
         ),
-        const Icon(Icons.settings_outlined,
-            color: Color(0xFFBCC8D1), size: 22),
+        const Icon(Icons.settings_outlined, color: Color(0xFFBCC8D1), size: 20),
       ],
     );
   }
 
   Widget _energyCard() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1B1B),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
@@ -127,27 +125,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     '1,482',
                     style: GoogleFonts.spaceGrotesk(
-                      fontSize: 52,
+                      fontSize: 38,
                       fontWeight: FontWeight.w700,
                       color: const Color(0xFF8FD6FF),
-                      letterSpacing: -1.04,
+                      letterSpacing: -0.76,
                       height: 1,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     'kcal remaining',
                     style: GoogleFonts.inter(
-                      fontSize: 13,
+                      fontSize: 11,
                       color: const Color(0xFFBCC8D1),
-                      letterSpacing: 0.65,
+                      letterSpacing: 0.55,
                     ),
                   ),
                 ],
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFF00BFFF).withOpacity(0.12),
                   borderRadius: BorderRadius.circular(9999),
@@ -155,26 +152,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   '62% TOTAL',
                   style: GoogleFonts.inter(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF8FD6FF),
-                    letterSpacing: 0.6,
+                    letterSpacing: 0.55,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                   child: _macroStat(
                       'Protein', '142g', '82%', const Color(0xFF8FD6FF), 0.82)),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
                   child: _macroStat(
                       'Carbs', '95g', '45%', const Color(0xFFDFC1FF), 0.45)),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
                   child: _macroStat(
                       'Fats', '42g', '60%', const Color(0xFF00BFFF), 0.60)),
@@ -193,35 +190,35 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           label,
           style: GoogleFonts.inter(
-              fontSize: 11, color: const Color(0xFFBCC8D1), letterSpacing: 0.55),
+              fontSize: 10, color: const Color(0xFFBCC8D1), letterSpacing: 0.5),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2),
         Row(
           children: [
             Text(
               value,
               style: GoogleFonts.spaceGrotesk(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: const Color(0xFFE5E2E1),
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 3),
             Text(
               percent,
-              style:
-                  GoogleFonts.inter(fontSize: 11, color: color, letterSpacing: 0.55),
+              style: GoogleFonts.inter(
+                  fontSize: 10, color: color, letterSpacing: 0.5),
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
         ClipRRect(
           borderRadius: BorderRadius.circular(9999),
           child: LinearProgressIndicator(
             value: progress,
             backgroundColor: const Color(0xFF353534),
             valueColor: AlwaysStoppedAnimation<Color>(color),
-            minHeight: 4,
+            minHeight: 3,
           ),
         ),
       ],
@@ -232,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(child: _gradientButton(Icons.fitness_center, 'Log Workout')),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(child: _gradientButton(Icons.restaurant, 'Log Meal')),
       ],
     );
@@ -240,22 +237,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _gradientButton(IconData icon, String label) {
     return Container(
-      height: 52,
+      height: 44,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF8FD6FF), Color(0xFF00BFFF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: TextButton.icon(
         onPressed: () {},
-        icon: Icon(icon, color: const Color(0xFF003549), size: 18),
+        icon: Icon(icon, color: const Color(0xFF003549), size: 16),
         label: Text(
           label,
           style: GoogleFonts.spaceGrotesk(
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
             color: const Color(0xFF003549),
           ),
@@ -271,19 +268,19 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           title,
           style: GoogleFonts.spaceGrotesk(
-            fontSize: 18,
+            fontSize: 15,
             fontWeight: FontWeight.w700,
             color: const Color(0xFFE5E2E1),
-            letterSpacing: -0.36,
+            letterSpacing: -0.3,
           ),
         ),
         if (action != null)
           Text(
             action,
             style: GoogleFonts.inter(
-              fontSize: 13,
+              fontSize: 12,
               color: const Color(0xFF8FD6FF),
-              letterSpacing: 0.65,
+              letterSpacing: 0.6,
             ),
           ),
       ],
@@ -292,9 +289,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _nextSessionCard() {
     return Container(
-      height: 188,
+      height: 152,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
           colors: [
             const Color(0xFF1C1B1B),
@@ -307,41 +304,39 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Chips
                 Row(
                   children: [
                     _chip('45 mins'),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     _chip('12 exercises'),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     _chip('Advanced'),
                   ],
                 ),
-                // Workout info
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'HYPER-PUMP: LEGS',
                       style: GoogleFonts.spaceGrotesk(
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: const Color(0xFFE5E2E1),
-                        letterSpacing: -0.44,
+                        letterSpacing: -0.36,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       'Today  •  18:30',
                       style: GoogleFonts.inter(
-                        fontSize: 13,
+                        fontSize: 12,
                         color: const Color(0xFF8FD6FF),
-                        letterSpacing: 0.65,
+                        letterSpacing: 0.6,
                       ),
                     ),
                   ],
@@ -349,13 +344,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          // Play button
           Positioned(
-            right: 20,
-            bottom: 20,
+            right: 14,
+            bottom: 14,
             child: Container(
-              width: 48,
-              height: 48,
+              width: 40,
+              height: 40,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
@@ -363,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               child: const Icon(Icons.play_arrow,
-                  color: Color(0xFF003549), size: 26),
+                  color: Color(0xFF003549), size: 22),
             ),
           ),
         ],
@@ -373,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _chip(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
         borderRadius: BorderRadius.circular(9999),
@@ -381,9 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Text(
         label,
         style: GoogleFonts.inter(
-            fontSize: 11,
-            color: const Color(0xFFBCC8D1),
-            letterSpacing: 0.55),
+            fontSize: 10, color: const Color(0xFFBCC8D1), letterSpacing: 0.5),
       ),
     );
   }
@@ -391,40 +383,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _milestoneCard(IconData icon, String label, String value,
       String target, double progress) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1B1B),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: const Color(0xFF8FD6FF), size: 22),
-          const SizedBox(height: 12),
+          Icon(icon, color: const Color(0xFF8FD6FF), size: 18),
+          const SizedBox(height: 8),
           Text(
             value,
             style: GoogleFonts.spaceGrotesk(
-              fontSize: 26,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
               color: const Color(0xFFE5E2E1),
-              letterSpacing: -0.52,
+              letterSpacing: -0.4,
             ),
           ),
           Text(
             'of $target $label',
             style: GoogleFonts.inter(
-                fontSize: 11,
+                fontSize: 10,
                 color: const Color(0xFFBCC8D1),
-                letterSpacing: 0.55),
+                letterSpacing: 0.5),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(9999),
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: const Color(0xFF353534),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF8FD6FF)),
-              minHeight: 6,
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(Color(0xFF8FD6FF)),
+              minHeight: 4,
             ),
           ),
         ],
@@ -441,8 +434,10 @@ class _HomeScreenState extends State<HomeScreen> {
       Icons.smart_toy_outlined,
     ];
 
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 8 + bottomPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1B1B).withOpacity(0.95),
         border: Border(
@@ -458,8 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => setState(() => _currentNavIndex = index),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: isActive
                     ? const Color(0xFF00BFFF).withOpacity(0.12)
@@ -471,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: isActive
                     ? const Color(0xFF8FD6FF)
                     : const Color(0xFF87929B),
-                size: 22,
+                size: 20,
               ),
             ),
           );
