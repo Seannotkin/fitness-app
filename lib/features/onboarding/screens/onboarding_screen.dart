@@ -104,8 +104,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       );
       await UserPrefs.checkAndUpdateStreak();
       if (mounted) {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).pushAndRemoveUntil(
           AppRoute(page: const HomeScreen()),
+          (route) => false,
         );
       }
     }

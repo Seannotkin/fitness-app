@@ -142,6 +142,11 @@ class UserPrefs {
     return prefs.getBool(_kOnboardingDone) ?? false;
   }
 
+  static Future<void> clearOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
   static Future<String> getName() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_kName) ?? 'Friend';

@@ -610,7 +610,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
             onTap: () {
               setState(() => _currentNavIndex = index);
               if (index == 0) {
-                Navigator.popUntil(context, (r) => r.isFirst);
+                Navigator.pop(context);
               } else if (index == 1) {
                 Navigator.pushReplacement(
                     context, AppRoute(page: const NutritionHubScreen()));

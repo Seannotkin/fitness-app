@@ -1036,7 +1036,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Widget screen;
     switch (index) {
       case 0:
-        Navigator.of(context).popUntil((r) => r.isFirst);
+        Navigator.of(context).pop();
         return;
       case 1:
         screen = const NutritionHubScreen();

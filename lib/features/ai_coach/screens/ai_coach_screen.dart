@@ -1053,7 +1053,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
             onTap: () {
               setState(() => _currentNavIndex = index);
               if (index == 0) {
-                Navigator.popUntil(context, (r) => r.isFirst);
+                Navigator.pop(context);
               } else if (index == 1) {
                 Navigator.pushReplacement(
                     context,

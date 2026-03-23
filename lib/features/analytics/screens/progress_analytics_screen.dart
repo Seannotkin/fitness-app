@@ -1074,7 +1074,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
           return GestureDetector(
             onTap: () {
               if (index == 0) {
-                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pop(context);
                 return;
               }
               if (index == 1) {

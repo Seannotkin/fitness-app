@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/services/user_prefs.dart';
+import '../../../core/routes/app_route.dart';
+import '../../onboarding/screens/splash_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -494,7 +496,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Text('Cancel', style: GoogleFonts.plusJakartaSans(color: _textSecondary)),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.pop(ctx),
+                  onPressed: () async {
+                    Navigator.pop(ctx);
+                    await UserPrefs.clearOnboarding();
+                    if (context.mounted) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        AppRoute(page: const SplashScreen()),
+                        (route) => false,
+                      );
+                    }
+                  },
                   child: Text('Sign Out', style: GoogleFonts.plusJakartaSans(color: Colors.red, fontWeight: FontWeight.w600)),
                 ),
               ],

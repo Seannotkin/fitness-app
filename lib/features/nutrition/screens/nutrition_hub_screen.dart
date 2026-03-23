@@ -725,7 +725,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
           return GestureDetector(
             onTap: () {
               if (index == 0) {
-                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pop(context);
                 return;
               }
               if (index == 1) return; // already on Nutrition
