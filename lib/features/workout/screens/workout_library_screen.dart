@@ -50,8 +50,452 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
     }
   }
 
-  void _openExercise() {
-    Navigator.push(context, AppRoute(page: const ExerciseDetailScreen()));
+  static const _categories = [
+    'All', 'Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Core', 'Flexibility',
+  ];
+
+  static const List<Map<String, dynamic>> _exercises = [
+    // ── Chest ──
+    {
+      'title': 'Barbell Bench Press',
+      'category': 'Chest',
+      'duration': '40 min',
+      'tag': 'Strength',
+      'sub': 'Chest · Triceps · Front Delts',
+      'sets': 4, 'reps': 8, 'weight': 60,
+      'muscles': ['Chest (Primary)', 'Triceps', 'Front Delts'],
+      'tips': ['Retract your shoulder blades', 'Touch bar to lower chest', 'Drive feet into the floor'],
+      'restSeconds': 90,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Incline Dumbbell Press',
+      'category': 'Chest',
+      'duration': '35 min',
+      'tag': 'Hypertrophy',
+      'sub': 'Upper Chest · Shoulders',
+      'sets': 3, 'reps': 10, 'weight': 24,
+      'muscles': ['Upper Chest (Primary)', 'Front Delts', 'Triceps'],
+      'tips': ['Set bench to 30–45°', 'Elbows at 75° angle', 'Full stretch at the bottom'],
+      'restSeconds': 75,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Cable Chest Fly',
+      'category': 'Chest',
+      'duration': '25 min',
+      'tag': 'Isolation',
+      'sub': 'Inner Chest · Pecs',
+      'sets': 3, 'reps': 12, 'weight': 15,
+      'muscles': ['Chest (Primary)', 'Front Delts'],
+      'tips': ['Slight bend in elbows throughout', 'Squeeze chest at peak', 'Control the eccentric'],
+      'restSeconds': 60,
+      'icon': 'sync_alt',
+    },
+    {
+      'title': 'Push-Up',
+      'category': 'Chest',
+      'duration': '20 min',
+      'tag': 'Bodyweight',
+      'sub': 'Chest · Triceps · Core',
+      'sets': 4, 'reps': 15, 'weight': 0,
+      'muscles': ['Chest (Primary)', 'Triceps', 'Core'],
+      'tips': ['Keep body in a straight line', 'Elbows at 45°', 'Full range of motion'],
+      'restSeconds': 60,
+      'icon': 'accessibility_new',
+    },
+    {
+      'title': 'Chest Dip',
+      'category': 'Chest',
+      'duration': '30 min',
+      'tag': 'Compound',
+      'sub': 'Lower Chest · Triceps',
+      'sets': 3, 'reps': 10, 'weight': 0,
+      'muscles': ['Lower Chest (Primary)', 'Triceps', 'Front Delts'],
+      'tips': ['Lean slightly forward', 'Lower until elbows 90°', 'Don\'t lock out at top'],
+      'restSeconds': 75,
+      'icon': 'arrow_downward',
+    },
+    // ── Back ──
+    {
+      'title': 'Deadlift',
+      'category': 'Back',
+      'duration': '45 min',
+      'tag': 'Strength',
+      'sub': 'Full Back · Hamstrings · Glutes',
+      'sets': 4, 'reps': 5, 'weight': 100,
+      'muscles': ['Lower Back (Primary)', 'Hamstrings', 'Glutes', 'Traps'],
+      'tips': ['Bar over mid-foot', 'Neutral spine throughout', 'Push the floor away'],
+      'restSeconds': 120,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Pull-Up',
+      'category': 'Back',
+      'duration': '30 min',
+      'tag': 'Bodyweight',
+      'sub': 'Lats · Biceps · Rear Delts',
+      'sets': 4, 'reps': 8, 'weight': 0,
+      'muscles': ['Lats (Primary)', 'Biceps', 'Rear Delts'],
+      'tips': ['Full hang at bottom', 'Drive elbows down to hips', 'Chin clears the bar'],
+      'restSeconds': 90,
+      'icon': 'arrow_upward',
+    },
+    {
+      'title': 'Barbell Row',
+      'category': 'Back',
+      'duration': '35 min',
+      'tag': 'Compound',
+      'sub': 'Mid Back · Lats · Biceps',
+      'sets': 4, 'reps': 8, 'weight': 70,
+      'muscles': ['Mid Back (Primary)', 'Lats', 'Biceps'],
+      'tips': ['Hinge at 45°', 'Pull to lower sternum', 'Squeeze at the top'],
+      'restSeconds': 90,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Lat Pulldown',
+      'category': 'Back',
+      'duration': '30 min',
+      'tag': 'Hypertrophy',
+      'sub': 'Lats · Teres Major',
+      'sets': 3, 'reps': 12, 'weight': 55,
+      'muscles': ['Lats (Primary)', 'Teres Major', 'Biceps'],
+      'tips': ['Lean back slightly', 'Pull to upper chest', 'Full stretch at top'],
+      'restSeconds': 60,
+      'icon': 'sync_alt',
+    },
+    {
+      'title': 'Face Pull',
+      'category': 'Back',
+      'duration': '20 min',
+      'tag': 'Corrective',
+      'sub': 'Rear Delts · Rotator Cuff',
+      'sets': 3, 'reps': 15, 'weight': 20,
+      'muscles': ['Rear Delts (Primary)', 'Rotator Cuff', 'Traps'],
+      'tips': ['Pull to eye level', 'External rotation at end', 'Light weight, perfect form'],
+      'restSeconds': 45,
+      'icon': 'self_improvement',
+    },
+    // ── Shoulders ──
+    {
+      'title': 'Overhead Press',
+      'category': 'Shoulders',
+      'duration': '40 min',
+      'tag': 'Strength',
+      'sub': 'Front & Side Delts · Triceps',
+      'sets': 4, 'reps': 6, 'weight': 50,
+      'muscles': ['Front Delts (Primary)', 'Side Delts', 'Triceps'],
+      'tips': ['Brace core hard', 'Bar path slightly back', 'Shrug at lockout'],
+      'restSeconds': 90,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Lateral Raise',
+      'category': 'Shoulders',
+      'duration': '25 min',
+      'tag': 'Isolation',
+      'sub': 'Side Delts · Width Builder',
+      'sets': 4, 'reps': 15, 'weight': 8,
+      'muscles': ['Side Delts (Primary)'],
+      'tips': ['Lead with elbows', 'Slight forward lean', 'Pause at shoulder height'],
+      'restSeconds': 45,
+      'icon': 'swap_horiz',
+    },
+    {
+      'title': 'Arnold Press',
+      'category': 'Shoulders',
+      'duration': '30 min',
+      'tag': 'Hypertrophy',
+      'sub': 'All Three Delt Heads',
+      'sets': 3, 'reps': 12, 'weight': 14,
+      'muscles': ['Front Delts (Primary)', 'Side Delts', 'Rear Delts'],
+      'tips': ['Rotate palms as you press', 'Start with palms facing you', 'Control the rotation down'],
+      'restSeconds': 60,
+      'icon': 'rotate_right',
+    },
+    {
+      'title': 'Rear Delt Fly',
+      'category': 'Shoulders',
+      'duration': '20 min',
+      'tag': 'Corrective',
+      'sub': 'Rear Delts · Posture',
+      'sets': 3, 'reps': 15, 'weight': 6,
+      'muscles': ['Rear Delts (Primary)', 'Traps'],
+      'tips': ['Hinge forward 90°', 'Pinkies higher than thumbs', 'Squeeze shoulder blades'],
+      'restSeconds': 45,
+      'icon': 'self_improvement',
+    },
+    {
+      'title': 'Front Raise',
+      'category': 'Shoulders',
+      'duration': '20 min',
+      'tag': 'Isolation',
+      'sub': 'Front Delts · Anterior',
+      'sets': 3, 'reps': 12, 'weight': 10,
+      'muscles': ['Front Delts (Primary)', 'Upper Chest'],
+      'tips': ['Raise to shoulder height', 'Slight elbow bend', 'Don\'t swing the weight'],
+      'restSeconds': 45,
+      'icon': 'arrow_upward',
+    },
+    // ── Arms ──
+    {
+      'title': 'Barbell Curl',
+      'category': 'Arms',
+      'duration': '25 min',
+      'tag': 'Strength',
+      'sub': 'Biceps · Forearms',
+      'sets': 4, 'reps': 8, 'weight': 30,
+      'muscles': ['Biceps (Primary)', 'Brachialis', 'Forearms'],
+      'tips': ['Keep elbows at your sides', 'Supinate at the top', 'Full extension at bottom'],
+      'restSeconds': 60,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Tricep Pushdown',
+      'category': 'Arms',
+      'duration': '20 min',
+      'tag': 'Isolation',
+      'sub': 'Triceps · Lateral Head',
+      'sets': 3, 'reps': 12, 'weight': 25,
+      'muscles': ['Triceps (Primary)', 'Lateral Head'],
+      'tips': ['Lock elbows at sides', 'Full extension at bottom', 'Slow eccentric'],
+      'restSeconds': 45,
+      'icon': 'arrow_downward',
+    },
+    {
+      'title': 'Hammer Curl',
+      'category': 'Arms',
+      'duration': '20 min',
+      'tag': 'Hypertrophy',
+      'sub': 'Brachialis · Forearms',
+      'sets': 3, 'reps': 12, 'weight': 14,
+      'muscles': ['Brachialis (Primary)', 'Biceps', 'Forearms'],
+      'tips': ['Neutral grip throughout', 'Alternate arms', 'No momentum'],
+      'restSeconds': 45,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Skull Crusher',
+      'category': 'Arms',
+      'duration': '25 min',
+      'tag': 'Compound',
+      'sub': 'Triceps Long Head',
+      'sets': 3, 'reps': 10, 'weight': 20,
+      'muscles': ['Triceps Long Head (Primary)', 'Lateral Head'],
+      'tips': ['Lower bar to forehead', 'Keep elbows tucked', 'Press back to start'],
+      'restSeconds': 60,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Preacher Curl',
+      'category': 'Arms',
+      'duration': '20 min',
+      'tag': 'Isolation',
+      'sub': 'Biceps · Peak Contraction',
+      'sets': 3, 'reps': 12, 'weight': 20,
+      'muscles': ['Biceps (Primary)', 'Brachialis'],
+      'tips': ['Full stretch at bottom', 'Don\'t let shoulder rise', 'Squeeze at top'],
+      'restSeconds': 45,
+      'icon': 'fitness_center',
+    },
+    // ── Legs ──
+    {
+      'title': 'Romanian Deadlift',
+      'category': 'Legs',
+      'duration': '40 min',
+      'tag': 'Strength',
+      'sub': 'Hamstrings · Glutes · Lower Back',
+      'sets': 4, 'reps': 10, 'weight': 60,
+      'muscles': ['Hamstrings (Primary)', 'Glutes', 'Lower Back'],
+      'tips': ['Hinge at the hips', 'Bar stays close to body', 'Feel stretch in hamstrings'],
+      'restSeconds': 90,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Back Squat',
+      'category': 'Legs',
+      'duration': '45 min',
+      'tag': 'Strength',
+      'sub': 'Quads · Glutes · Hamstrings',
+      'sets': 4, 'reps': 6, 'weight': 80,
+      'muscles': ['Quads (Primary)', 'Glutes', 'Hamstrings'],
+      'tips': ['Feet shoulder-width apart', 'Knees track over toes', 'Break parallel depth'],
+      'restSeconds': 120,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Leg Press',
+      'category': 'Legs',
+      'duration': '35 min',
+      'tag': 'Hypertrophy',
+      'sub': 'Quads · Glutes',
+      'sets': 4, 'reps': 12, 'weight': 120,
+      'muscles': ['Quads (Primary)', 'Glutes', 'Hamstrings'],
+      'tips': ['Feet mid-platform', 'Don\'t lock out knees', 'Full depth of motion'],
+      'restSeconds': 75,
+      'icon': 'fitness_center',
+    },
+    {
+      'title': 'Bulgarian Split Squat',
+      'category': 'Legs',
+      'duration': '35 min',
+      'tag': 'Unilateral',
+      'sub': 'Quads · Glutes · Balance',
+      'sets': 3, 'reps': 10, 'weight': 20,
+      'muscles': ['Quads (Primary)', 'Glutes', 'Hip Flexors'],
+      'tips': ['Rear foot elevated', 'Front shin stays vertical', 'Drive through front heel'],
+      'restSeconds': 75,
+      'icon': 'directions_run',
+    },
+    {
+      'title': 'Leg Curl',
+      'category': 'Legs',
+      'duration': '25 min',
+      'tag': 'Isolation',
+      'sub': 'Hamstrings · Knee Flexion',
+      'sets': 3, 'reps': 12, 'weight': 40,
+      'muscles': ['Hamstrings (Primary)', 'Glutes'],
+      'tips': ['Full range of motion', 'Pause at peak contraction', 'Slow on the way down'],
+      'restSeconds': 60,
+      'icon': 'fitness_center',
+    },
+    // ── Core ──
+    {
+      'title': 'Plank',
+      'category': 'Core',
+      'duration': '15 min',
+      'tag': 'Stability',
+      'sub': 'Deep Core · Anti-Rotation',
+      'sets': 3, 'reps': 1, 'weight': 0,
+      'muscles': ['Transverse Abdominis (Primary)', 'Obliques', 'Glutes'],
+      'tips': ['Neutral spine', 'Squeeze glutes and core', 'Breathe steadily'],
+      'restSeconds': 60,
+      'icon': 'accessibility_new',
+    },
+    {
+      'title': 'Dead Bug',
+      'category': 'Core',
+      'duration': '15 min',
+      'tag': 'Corrective',
+      'sub': 'Deep Core · Coordination',
+      'sets': 3, 'reps': 10, 'weight': 0,
+      'muscles': ['Deep Core (Primary)', 'Hip Flexors'],
+      'tips': ['Lower back pressed to floor', 'Breathe out as you extend', 'Move slowly'],
+      'restSeconds': 45,
+      'icon': 'accessibility_new',
+    },
+    {
+      'title': 'Russian Twist',
+      'category': 'Core',
+      'duration': '20 min',
+      'tag': 'Rotation',
+      'sub': 'Obliques · Rotational Power',
+      'sets': 3, 'reps': 20, 'weight': 8,
+      'muscles': ['Obliques (Primary)', 'Rectus Abdominis'],
+      'tips': ['Lean back 45°', 'Keep feet off the floor', 'Touch weight to each side'],
+      'restSeconds': 45,
+      'icon': 'rotate_right',
+    },
+    {
+      'title': 'Hanging Knee Raise',
+      'category': 'Core',
+      'duration': '20 min',
+      'tag': 'Strength',
+      'sub': 'Lower Abs · Hip Flexors',
+      'sets': 3, 'reps': 12, 'weight': 0,
+      'muscles': ['Lower Abs (Primary)', 'Hip Flexors'],
+      'tips': ['Don\'t swing', 'Posterior pelvic tilt at top', 'Control the descent'],
+      'restSeconds': 60,
+      'icon': 'arrow_upward',
+    },
+    // ── Flexibility ──
+    {
+      'title': 'Hip Flexor Stretch',
+      'category': 'Flexibility',
+      'duration': '10 min',
+      'tag': 'Restorative',
+      'sub': 'Hip Flexors · Psoas',
+      'sets': 2, 'reps': 1, 'weight': 0,
+      'muscles': ['Hip Flexors (Primary)', 'Psoas', 'Quads'],
+      'tips': ['90° front knee angle', 'Tuck pelvis under', 'Hold 30–60 seconds each side'],
+      'restSeconds': 30,
+      'icon': 'self_improvement',
+    },
+    {
+      'title': 'Thoracic Rotation',
+      'category': 'Flexibility',
+      'duration': '10 min',
+      'tag': 'Mobility',
+      'sub': 'Upper Back · Spine',
+      'sets': 2, 'reps': 10, 'weight': 0,
+      'muscles': ['Thoracic Spine (Primary)', 'Rotator Cuff'],
+      'tips': ['Move from mid-back, not lower', 'Keep hips still', 'Breathe through each rep'],
+      'restSeconds': 30,
+      'icon': 'rotate_right',
+    },
+    {
+      'title': 'Pigeon Pose',
+      'category': 'Flexibility',
+      'duration': '12 min',
+      'tag': 'Restorative',
+      'sub': 'Glutes · Piriformis · Hip',
+      'sets': 2, 'reps': 1, 'weight': 0,
+      'muscles': ['Glutes (Primary)', 'Piriformis', 'Hip External Rotators'],
+      'tips': ['Square hips to the mat', 'Fold forward to deepen', 'Hold 60–90 seconds'],
+      'restSeconds': 30,
+      'icon': 'self_improvement',
+    },
+    {
+      'title': 'Hamstring Hold',
+      'category': 'Flexibility',
+      'duration': '10 min',
+      'tag': 'Lengthening',
+      'sub': 'Hamstrings · Lower Back',
+      'sets': 2, 'reps': 1, 'weight': 0,
+      'muscles': ['Hamstrings (Primary)', 'Calves'],
+      'tips': ['Soft bend in standing knee', 'Flex foot of raised leg', 'Hold 45 seconds'],
+      'restSeconds': 30,
+      'icon': 'self_improvement',
+    },
+    {
+      'title': 'Child\'s Pose',
+      'category': 'Flexibility',
+      'duration': '8 min',
+      'tag': 'Recovery',
+      'sub': 'Spine · Hips · Shoulders',
+      'sets': 1, 'reps': 1, 'weight': 0,
+      'muscles': ['Lats (Primary)', 'Thoracic Spine', 'Hips'],
+      'tips': ['Arms extended fully', 'Sink hips to heels', 'Breathe into the lower back'],
+      'restSeconds': 0,
+      'icon': 'bedtime_outlined',
+    },
+  ];
+
+  List<Map<String, dynamic>> get _filteredExercises {
+    if (_selectedCategory == 0) return _exercises;
+    final cat = _categories[_selectedCategory];
+    return _exercises.where((e) => e['category'] == cat).toList();
+  }
+
+  IconData _iconForExercise(Map<String, dynamic> e) {
+    final s = e['icon'] as String;
+    switch (s) {
+      case 'sync_alt': return Icons.sync_alt;
+      case 'swap_horiz': return Icons.swap_horiz;
+      case 'rotate_right': return Icons.rotate_right;
+      case 'arrow_upward': return Icons.arrow_upward;
+      case 'arrow_downward': return Icons.arrow_downward;
+      case 'directions_run': return Icons.directions_run;
+      case 'accessibility_new': return Icons.accessibility_new;
+      case 'self_improvement': return Icons.self_improvement;
+      case 'bedtime_outlined': return Icons.bedtime_outlined;
+      default: return Icons.fitness_center;
+    }
+  }
+
+  void _openExercise(Map<String, dynamic> exercise) {
+    Navigator.push(context, AppRoute(page: ExerciseDetailScreen(exercise: exercise)));
   }
 
   @override
@@ -291,7 +735,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           ),
           const SizedBox(width: 10),
           GestureDetector(
-            onTap: _openExercise,
+            onTap: () => _openExercise(_exercises.first),
             child: Container(
               width: 46,
               height: 46,
@@ -335,7 +779,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
               child: Padding(
                 padding: EdgeInsets.only(right: i < 2 ? 10 : 0),
                 child: GestureDetector(
-                  onTap: _openExercise,
+                  onTap: () => _openExercise(_exercises.first),
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
@@ -388,15 +832,6 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
   // ─── Target Focus ──────────────────────────────────────────────────────────
 
   Widget _targetFocus() {
-    const categories = [
-      'Chest',
-      'Legs  ·  14 Routines',
-      'Core',
-      'Back',
-      'Upper Body',
-      'Foundational',
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -413,7 +848,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           height: 38,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: categories.length,
+            itemCount: _categories.length,
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (_, i) {
               final isSelected = _selectedCategory == i;
@@ -430,7 +865,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                         Border.all(color: isSelected ? _primary : _outline),
                   ),
                   child: Text(
-                    categories[i],
+                    _categories[i],
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -449,29 +884,8 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
   // ─── New & Notable ─────────────────────────────────────────────────────────
 
   Widget _newAndNotable() {
-    final workouts = [
-      {
-        'title': 'Golden Hour Power Sculpt',
-        'duration': '45 min',
-        'tag': 'Advanced Flow',
-        'sub': 'Metabolic endurance',
-        'icon': Icons.bolt,
-      },
-      {
-        'title': 'Lunar Mobility Release',
-        'duration': '15 min',
-        'tag': 'Restorative',
-        'sub': 'Tissue relaxation prep',
-        'icon': Icons.bedtime_outlined,
-      },
-      {
-        'title': 'Deep Core Foundations',
-        'duration': '30 min',
-        'tag': 'Stability',
-        'sub': 'Pelvic floor activation',
-        'icon': Icons.accessibility_new,
-      },
-    ];
+    final workouts = _filteredExercises;
+    final label = _selectedCategory == 0 ? 'All Exercises' : _categories[_selectedCategory];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -480,33 +894,18 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'New & Notable',
+              label,
               style: GoogleFonts.manrope(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: _onSurface,
               ),
             ),
-            GestureDetector(
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('All workouts',
-                      style: GoogleFonts.plusJakartaSans(fontSize: 13)),
-                  backgroundColor: _primary,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  duration: const Duration(seconds: 1),
-                ),
-              ),
-              child: Text(
-                'See all',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13,
-                  color: _primary,
-                  fontWeight: FontWeight.w600,
-                ),
+            Text(
+              '${workouts.length} exercises',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13,
+                color: _secondary,
               ),
             ),
           ],
@@ -516,7 +915,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
           (w) => Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: GestureDetector(
-              onTap: _openExercise,
+              onTap: () => _openExercise(w),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -533,8 +932,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                         color: _primaryContainer.withValues(alpha: 0.45),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: Icon(w['icon'] as IconData,
-                          color: _primary, size: 24),
+                      child: Icon(_iconForExercise(w), color: _primary, size: 24),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -566,8 +964,19 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right,
-                        color: _secondary, size: 20),
+                    Column(
+                      children: [
+                        Text(
+                          '${w['sets']}×${w['reps']}',
+                          style: GoogleFonts.manrope(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: _primary,
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right, color: _secondary, size: 20),
+                      ],
+                    ),
                   ],
                 ),
               ),
