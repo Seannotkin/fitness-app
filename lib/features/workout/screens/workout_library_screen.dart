@@ -16,7 +16,7 @@ class WorkoutLibraryScreen extends StatefulWidget {
 }
 
 class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
-  int _currentNavIndex = 2;
+  int _currentNavIndex = 1;
   int _selectedCategory = 0;
   int _intention = 0;
   int _activityLevel = 2;
@@ -1021,10 +1021,10 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
               if (index == 0) {
                 Navigator.pop(context);
               } else if (index == 1) {
-                Navigator.pushReplacement(
-                    context, AppRoute(page: const NutritionHubScreen(), reverse: true));
-              } else if (index == 2) {
                 // already on Workout
+              } else if (index == 2) {
+                Navigator.pushReplacement(
+                    context, AppRoute(page: const NutritionHubScreen()));
               } else if (index == 3) {
                 Navigator.pushReplacement(
                     context,

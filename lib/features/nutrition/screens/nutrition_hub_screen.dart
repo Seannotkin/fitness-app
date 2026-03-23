@@ -16,7 +16,7 @@ class NutritionHubScreen extends StatefulWidget {
 }
 
 class _NutritionHubScreenState extends State<NutritionHubScreen> {
-  int _currentNavIndex = 1;
+  int _currentNavIndex = 2;
   double _tdee = 2000;
   Map<String, int> _macros = {'protein': 150, 'carbs': 196, 'fats': 62};
   List<Map<String, dynamic>> _suggestedMeals = [];
@@ -744,14 +744,14 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                 Navigator.pop(context);
                 return;
               }
-              if (index == 1) return; // already on Nutrition
-              if (index == 2) {
+              if (index == 1) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const WorkoutLibraryScreen()),
+                  AppRoute(page: const WorkoutLibraryScreen(), reverse: true),
                 );
                 return;
               }
+              if (index == 2) return; // already on Nutrition
               if (index == 3) {
                 Navigator.pushReplacement(
                   context,

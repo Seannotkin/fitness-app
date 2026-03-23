@@ -5,6 +5,7 @@ import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
+import '../../onboarding/screens/splash_screen.dart';
 import '../../../core/services/user_prefs.dart';
 import 'settings_screen.dart';
 
@@ -113,15 +114,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _header() {
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            'Solace',
-            style: GoogleFonts.manrope(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: _textPrimary,
-              letterSpacing: -0.5,
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _primaryContainer,
+            border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
+          ),
+          child: Center(
+            child: Text(
+              _userInitials,
+              style: const TextStyle(
+                color: _primary,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
             ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Profile',
+                style: GoogleFonts.manrope(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: _textPrimary,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              Text(
+                'Your wellness journey',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  color: _textSecondary,
+                ),
+              ),
+            ],
           ),
         ),
         GestureDetector(
@@ -895,8 +928,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text('Cancel', style: GoogleFonts.plusJakartaSans(color: _textSecondary)),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text('Sign Out', style: GoogleFonts.plusJakartaSans(color: Colors.red)),
+                    onPressed: () async {
+                      Navigator.pop(ctx);
+                      await UserPrefs.clearOnboarding();
+                      if (context.mounted) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          AppRoute(page: const SplashScreen()),
+                          (route) => false,
+                        );
+                      }
+                    },
+                    child: Text('Sign Out', style: GoogleFonts.plusJakartaSans(color: Colors.red, fontWeight: FontWeight.w600)),
                   ),
                 ],
               ),
@@ -973,8 +1015,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _bottomNav(double bottomPadding) {
     const items = [
       (Icons.home_rounded, Icons.home_outlined, 'Home'),
-      (Icons.restaurant_rounded, Icons.restaurant_outlined, 'Nutrition'),
       (Icons.fitness_center_rounded, Icons.fitness_center_outlined, 'Workout'),
+      (Icons.restaurant_rounded, Icons.restaurant_outlined, 'Nutrition'),
       (Icons.bar_chart_rounded, Icons.bar_chart_outlined, 'Progress'),
       (Icons.smart_toy_rounded, Icons.smart_toy_outlined, 'Sage'),
     ];
@@ -1039,10 +1081,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Navigator.of(context).pop();
         return;
       case 1:
-        screen = const NutritionHubScreen();
+        screen = const WorkoutLibraryScreen();
         break;
       case 2:
-        screen = const WorkoutLibraryScreen();
+        screen = const NutritionHubScreen();
         break;
       case 3:
         screen = const ProgressAnalyticsScreen();

@@ -530,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      setState(() => _currentNavIndex = 2);
+                      setState(() => _currentNavIndex = 1);
                       Navigator.push(
                         context,
                         AppRoute(page: const WorkoutLibraryScreen()),
@@ -723,7 +723,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Deep Sleep: 1h 22m',
+            'Connect device to track',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 10,
               color: _textSecondary,
