@@ -1057,15 +1057,15 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
               } else if (index == 1) {
                 Navigator.pushReplacement(
                     context,
-                    AppRoute(page: const WorkoutLibraryScreen()));
+                    AppRoute(page: const WorkoutLibraryScreen(), reverse: true));
               } else if (index == 2) {
                 Navigator.pushReplacement(
                     context,
-                    AppRoute(page: const NutritionHubScreen()));
+                    AppRoute(page: const NutritionHubScreen(), reverse: true));
               } else if (index == 3) {
                 Navigator.pushReplacement(
                     context,
-                    AppRoute(page: const ProgressAnalyticsScreen()));
+                    AppRoute(page: const ProgressAnalyticsScreen(), reverse: true));
               }
             },
             child: AnimatedContainer(

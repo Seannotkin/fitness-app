@@ -613,7 +613,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                 Navigator.pop(context);
               } else if (index == 1) {
                 Navigator.pushReplacement(
-                    context, AppRoute(page: const NutritionHubScreen()));
+                    context, AppRoute(page: const NutritionHubScreen(), reverse: true));
               } else if (index == 2) {
                 // already on Workout
               } else if (index == 3) {

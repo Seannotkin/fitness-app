@@ -1080,14 +1080,14 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
               if (index == 1) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const WorkoutLibraryScreen()),
+                  AppRoute(page: const WorkoutLibraryScreen(), reverse: true),
                 );
                 return;
               }
               if (index == 2) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const NutritionHubScreen()),
+                  AppRoute(page: const NutritionHubScreen(), reverse: true),
                 );
                 return;
               }

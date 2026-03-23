@@ -1,29 +1,40 @@
 import 'package:flutter/material.dart';
 
 class AppRoute<T> extends PageRouteBuilder<T> {
-  AppRoute({required Widget page})
+  /// [reverse] = true when navigating to a screen that is "left" in the nav
+  /// bar (lower index). The new page slides in from the left.
+  AppRoute({required Widget page, bool reverse = false})
       : super(
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionDuration: const Duration(milliseconds: 300),
+          pageBuilder: (_, __, ___) => page,
+          transitionDuration: const Duration(milliseconds: 280),
           reverseTransitionDuration: const Duration(milliseconds: 280),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final curve = CurveTween(curve: Curves.easeInOutCubic);
+          transitionsBuilder: (_, animation, secondaryAnimation, child) {
+            final dx = reverse ? -1.0 : 1.0;
 
-            // Incoming page slides in from the right
-            final slideIn = animation.drive(
-              Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
-                  .chain(curve),
+            // Incoming page slides from right (or left if reverse)
+            final slide = animation.drive(
+              Tween(begin: Offset(dx, 0.0), end: Offset.zero)
+                  .chain(CurveTween(curve: Curves.easeOutCubic)),
             );
 
-            // Outgoing page slides out to the left (subtle, 30%)
-            final slideOut = secondaryAnimation.drive(
-              Tween(begin: Offset.zero, end: const Offset(-0.3, 0.0))
-                  .chain(curve),
+            // Fade in masks any jump from pushReplacement cutting old page
+            final fade = animation.drive(
+              Tween(begin: 0.0, end: 1.0)
+                  .chain(CurveTween(curve: Curves.easeOut)),
+            );
+
+            // Page below slides out slightly (parallax — works for push/pop)
+            final secondarySlide = secondaryAnimation.drive(
+              Tween(begin: Offset.zero, end: Offset(-dx * 0.25, 0.0))
+                  .chain(CurveTween(curve: Curves.easeInCubic)),
             );
 
             return SlideTransition(
-              position: slideOut,
-              child: SlideTransition(position: slideIn, child: child),
+              position: secondarySlide,
+              child: FadeTransition(
+                opacity: fade,
+                child: SlideTransition(position: slide, child: child),
+              ),
             );
           },
         );
