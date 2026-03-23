@@ -5,6 +5,7 @@ import '../../../core/services/user_prefs.dart';
 import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 import 'exercise_detail_screen.dart';
 
 class WorkoutLibraryScreen extends StatefulWidget {
@@ -542,44 +543,43 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
 
   Widget _header() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Menu',
-                      style: GoogleFonts.plusJakartaSans(fontSize: 13)),
-                  backgroundColor: _primary,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  duration: const Duration(seconds: 1),
-                ),
-              ),
-              child: const Icon(Icons.menu, color: _onSurface, size: 24),
+        GestureDetector(
+          onTap: () => Navigator.push(context, AppRoute(page: const ProfileScreen())),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _primaryContainer,
+              border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
             ),
-            const SizedBox(width: 12),
-            Text(
-              'Workouts',
-              style: GoogleFonts.manrope(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: _onSurface,
-              ),
-            ),
-          ],
-        ),
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _primaryContainer,
+            child: const Icon(Icons.person, color: _primary, size: 22),
           ),
-          child: const Icon(Icons.person, color: _primary, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'Workouts',
+            style: GoogleFonts.manrope(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: _onSurface,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+              backgroundColor: _primary,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              duration: const Duration(seconds: 1),
+            ),
+          ),
+          child: const Icon(Icons.menu, color: _onSurface, size: 24),
         ),
       ],
     );

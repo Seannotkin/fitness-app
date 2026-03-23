@@ -5,6 +5,7 @@ import '../../../core/services/user_prefs.dart';
 import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 import 'meal_detail_screen.dart';
 
 class NutritionHubScreen extends StatefulWidget {
@@ -90,15 +91,18 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _primaryContainer,
-            border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
+        GestureDetector(
+          onTap: () => Navigator.push(context, AppRoute(page: const ProfileScreen())),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _primaryContainer,
+              border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
+            ),
+            child: const Icon(Icons.person, color: _primary, size: 22),
           ),
-          child: const Icon(Icons.person, color: _primary, size: 22),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -115,7 +119,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                 ),
               ),
               Text(
-                'Nutrition Hub',
+                'Nourish your body',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   color: _textSecondary,
@@ -125,7 +129,19 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
             ],
           ),
         ),
-        const Icon(Icons.settings_outlined, color: _textSecondary, size: 22),
+        GestureDetector(
+          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+              backgroundColor: const Color(0xFF4E6451),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              duration: const Duration(seconds: 1),
+            ),
+          ),
+          child: const Icon(Icons.menu, color: _textSecondary, size: 24),
+        ),
       ],
     );
   }

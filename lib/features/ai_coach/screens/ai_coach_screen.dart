@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
 import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
 import '../../../core/services/user_prefs.dart';
 
@@ -159,14 +160,18 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
       child: Row(
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _primaryContainer,
+          GestureDetector(
+            onTap: () => Navigator.push(context, AppRoute(page: const ProfileScreen())),
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _primaryContainer,
+                border: Border.all(color: _primary.withValues(alpha: 0.3), width: 1.5),
+              ),
+              child: const Icon(Icons.person, color: _primary, size: 22),
             ),
-            child: const Icon(Icons.person, color: _primary, size: 22),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -174,16 +179,16 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Good morning, $_userName',
+                  'Sage',
                   style: GoogleFonts.manrope(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: _onSurface,
                     letterSpacing: -0.3,
                   ),
                 ),
                 Text(
-                  'Sage is ready for you',
+                  'Your AI partner',
                   style: GoogleFonts.plusJakartaSans(
                       fontSize: 12, color: _secondary),
                 ),
@@ -193,7 +198,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
           GestureDetector(
             onTap: () => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Settings',
+                content: Text('Menu',
                     style: GoogleFonts.plusJakartaSans(fontSize: 13)),
                 backgroundColor: _primary,
                 behavior: SnackBarBehavior.floating,
@@ -203,17 +208,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
                 duration: const Duration(seconds: 1),
               ),
             ),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: _cardBg,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: _outline),
-              ),
-              child: const Icon(Icons.settings_outlined,
-                  color: _secondary, size: 20),
-            ),
+            child: const Icon(Icons.menu, color: _secondary, size: 24),
           ),
         ],
       ),

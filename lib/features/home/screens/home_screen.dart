@@ -183,7 +183,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        const Icon(Icons.settings_outlined, color: _textSecondary, size: 22),
+        GestureDetector(
+          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+              backgroundColor: _primary,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              duration: const Duration(seconds: 1),
+            ),
+          ),
+          child: const Icon(Icons.menu, color: _textSecondary, size: 24),
+        ),
       ],
     );
   }

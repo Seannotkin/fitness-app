@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/routes/app_route.dart';
 import '../../ai_coach/screens/ai_coach_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
 
 class ProgressAnalyticsScreen extends StatefulWidget {
@@ -89,50 +90,59 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
   // ── HEADER ──────────────────────────────────────────────────────────────────
 
   Widget _header() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _primaryContainer,
-                border: Border.all(
-                    color: _primary.withValues(alpha: 0.3), width: 1.5),
-              ),
-              child: const Icon(Icons.person, color: _primary, size: 22),
+        GestureDetector(
+          onTap: () => Navigator.push(context, AppRoute(page: const ProfileScreen())),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _primaryContainer,
+              border: Border.all(
+                  color: _primary.withValues(alpha: 0.3), width: 1.5),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Progress',
-                    style: GoogleFonts.manrope(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: _textPrimary,
-                      letterSpacing: -0.34,
-                    ),
-                  ),
-                  Text(
-                    'Your Progress, Held Gently',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11,
-                      color: _textSecondary,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
+            child: const Icon(Icons.person, color: _primary, size: 22),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Progress',
+                style: GoogleFonts.manrope(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: _textPrimary,
+                  letterSpacing: -0.34,
+                ),
               ),
+              Text(
+                'Your Progress, Held Gently',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11,
+                  color: _textSecondary,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+              backgroundColor: _primary,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              duration: const Duration(seconds: 1),
             ),
-            const Icon(Icons.settings_outlined,
-                color: _textSecondary, size: 22),
-          ],
+          ),
+          child: const Icon(Icons.menu, color: _textSecondary, size: 24),
         ),
       ],
     );
