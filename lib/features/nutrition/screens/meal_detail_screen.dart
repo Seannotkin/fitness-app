@@ -94,7 +94,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Sage & Solace',
+              'Meal Detail',
               style: GoogleFonts.manrope(
                 fontSize: 17,
                 fontWeight: FontWeight.w700,

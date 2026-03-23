@@ -111,7 +111,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'The Quiet Partner',
+                    'Progress',
                     style: GoogleFonts.manrope(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,

@@ -563,7 +563,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
             ),
             const SizedBox(width: 12),
             Text(
-              'Sage & Solace',
+              'Workouts',
               style: GoogleFonts.manrope(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,

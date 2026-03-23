@@ -106,7 +106,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sage & Solace',
+                'Nutrition Hub',
                 style: GoogleFonts.manrope(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
