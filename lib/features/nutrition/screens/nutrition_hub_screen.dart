@@ -49,7 +49,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
 
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
-  static const _primaryContainer = Color(0xFFCFE3D4);
+  static const _primaryContainer = Color(0xFFD0E9D1);
   static const _textPrimary = Color(0xFF303333);
   static const _textSecondary = Color(0xFF5A605C);
   static const _cardBg = Color(0xFFFFFFFF);
@@ -295,7 +295,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                   'Protein',
                   '${_macros['protein']}g',
                   const Color(0xFF4E6451),
-                  const Color(0xFFCFE3D4),
+                  const Color(0xFFD0E9D1),
                 ),
               ),
               const SizedBox(width: 8),
