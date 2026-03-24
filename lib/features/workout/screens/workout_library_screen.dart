@@ -7,6 +7,7 @@ import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../nutrition/screens/nutrition_hub_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import 'exercise_detail_screen.dart';
+import '../../../core/widgets/side_menu.dart';
 
 class WorkoutLibraryScreen extends StatefulWidget {
   const WorkoutLibraryScreen({super.key});
@@ -505,6 +506,7 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
 
     return Scaffold(
       backgroundColor: _bg,
+      endDrawer: const SideMenu(),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -568,18 +570,11 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
-              backgroundColor: _primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              duration: const Duration(seconds: 1),
-            ),
+        Builder(
+          builder: (ctx) => GestureDetector(
+            onTap: () => Scaffold.of(ctx).openEndDrawer(),
+            child: const Icon(Icons.menu, color: _onSurface, size: 24),
           ),
-          child: const Icon(Icons.menu, color: _onSurface, size: 24),
         ),
       ],
     );
@@ -1024,14 +1019,14 @@ class _WorkoutLibraryScreenState extends State<WorkoutLibraryScreen> {
                 // already on Workout
               } else if (index == 2) {
                 Navigator.pushReplacement(
-                    context, AppRoute(page: const NutritionHubScreen()));
+                    context, AppRoute(page: const NutritionHubScreen(), instant: true));
               } else if (index == 3) {
                 Navigator.pushReplacement(
                     context,
-                    AppRoute(page: const ProgressAnalyticsScreen()));
+                    AppRoute(page: const ProgressAnalyticsScreen(), instant: true));
               } else if (index == 4) {
                 Navigator.pushReplacement(
-                    context, AppRoute(page: const AiCoachScreen()));
+                    context, AppRoute(page: const AiCoachScreen(), instant: true));
               }
             },
             child: AnimatedContainer(

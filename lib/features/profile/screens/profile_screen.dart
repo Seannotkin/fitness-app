@@ -8,6 +8,7 @@ import '../../workout/screens/workout_library_screen.dart';
 import '../../onboarding/screens/splash_screen.dart';
 import '../../../core/services/user_prefs.dart';
 import 'settings_screen.dart';
+import '../../../core/widgets/side_menu.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -76,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: _bg,
+      endDrawer: const SideMenu(),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -157,24 +159,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Menu coming soon'),
-                duration: Duration(seconds: 2),
+        Builder(
+          builder: (ctx) => GestureDetector(
+            onTap: () => Scaffold.of(ctx).openEndDrawer(),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: _cardBg,
+                shape: BoxShape.circle,
+                border: Border.all(color: _outline),
               ),
-            );
-          },
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: _cardBg,
-              shape: BoxShape.circle,
-              border: Border.all(color: _outline),
+              child: const Icon(Icons.menu_rounded, color: _textSecondary, size: 20),
             ),
-            child: const Icon(Icons.menu_rounded, color: _textSecondary, size: 20),
           ),
         ),
       ],
@@ -1095,6 +1092,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       default:
         return;
     }
-    Navigator.of(context).pushReplacement(AppRoute(page: screen));
+    Navigator.of(context).pushReplacement(AppRoute(page: screen, instant: true));
   }
 }

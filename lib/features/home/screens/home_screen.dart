@@ -7,6 +7,7 @@ import '../../nutrition/screens/nutrition_hub_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../../core/services/user_prefs.dart';
+import '../../../core/widgets/side_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: _bg,
+      endDrawer: const SideMenu(),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -183,18 +185,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
-              backgroundColor: _primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              duration: const Duration(seconds: 1),
-            ),
+        Builder(
+          builder: (ctx) => GestureDetector(
+            onTap: () => Scaffold.of(ctx).openEndDrawer(),
+            child: const Icon(Icons.menu, color: _textSecondary, size: 24),
           ),
-          child: const Icon(Icons.menu, color: _textSecondary, size: 24),
         ),
       ],
     );
@@ -704,21 +699,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEDE7F6),
-              borderRadius: BorderRadius.circular(9999),
-            ),
-            child: Text(
-              'Connect device to track',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF6A1B9A),
-                letterSpacing: 0.2,
-              ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(9999),
+            child: const LinearProgressIndicator(
+              value: 0.0,
+              backgroundColor: Color(0xFFEDE7F6),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6A1B9A)),
+              minHeight: 5,
             ),
           ),
           const SizedBox(height: 6),
@@ -874,22 +862,22 @@ class _HomeScreenState extends State<HomeScreen> {
               if (index == 1) {
                 Navigator.push(
                   context,
-                  AppRoute(page: const WorkoutLibraryScreen()),
+                  AppRoute(page: const WorkoutLibraryScreen(), instant: true),
                 ).then((_) => setState(() => _currentNavIndex = 0));
               } else if (index == 2) {
                 Navigator.push(
                   context,
-                  AppRoute(page: const NutritionHubScreen()),
+                  AppRoute(page: const NutritionHubScreen(), instant: true),
                 ).then((_) => setState(() => _currentNavIndex = 0));
               } else if (index == 3) {
                 Navigator.push(
                   context,
-                  AppRoute(page: const ProgressAnalyticsScreen()),
+                  AppRoute(page: const ProgressAnalyticsScreen(), instant: true),
                 ).then((_) => setState(() => _currentNavIndex = 0));
               } else if (index == 4) {
                 Navigator.push(
                   context,
-                  AppRoute(page: const AiCoachScreen()),
+                  AppRoute(page: const AiCoachScreen(), instant: true),
                 ).then((_) => setState(() => _currentNavIndex = 0));
               }
             },

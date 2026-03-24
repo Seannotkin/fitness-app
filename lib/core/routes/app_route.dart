@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class AppRoute<T> extends PageRouteBuilder<T> {
   /// [reverse] = true when navigating to a screen that is "left" in the nav
   /// bar (lower index). The new page slides in from the left.
-  AppRoute({required Widget page, bool reverse = false})
+  AppRoute({required Widget page, bool reverse = false, bool instant = false})
       : super(
           pageBuilder: (_, __, ___) => page,
-          transitionDuration: const Duration(milliseconds: 280),
-          reverseTransitionDuration: const Duration(milliseconds: 280),
+          transitionDuration: instant ? Duration.zero : const Duration(milliseconds: 280),
+          reverseTransitionDuration: instant ? Duration.zero : const Duration(milliseconds: 280),
           transitionsBuilder: (_, animation, secondaryAnimation, child) {
             final dx = reverse ? -1.0 : 1.0;
 

@@ -7,6 +7,7 @@ import '../../analytics/screens/progress_analytics_screen.dart';
 import '../../workout/screens/workout_library_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import 'meal_detail_screen.dart';
+import '../../../core/widgets/side_menu.dart';
 
 class NutritionHubScreen extends StatefulWidget {
   const NutritionHubScreen({super.key});
@@ -40,6 +41,12 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
     }
   }
 
+  String get _formattedDate {
+    final now = DateTime.now();
+    const months = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '${months[now.month]} ${now.day}, ${now.year}';
+  }
+
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
   static const _primaryContainer = Color(0xFFCFE3D4);
@@ -55,6 +62,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
 
     return Scaffold(
       backgroundColor: _bg,
+      endDrawer: const SideMenu(),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -129,18 +137,11 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Menu', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
-              backgroundColor: const Color(0xFF4E6451),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              duration: const Duration(seconds: 1),
-            ),
+        Builder(
+          builder: (ctx) => GestureDetector(
+            onTap: () => Scaffold.of(ctx).openEndDrawer(),
+            child: const Icon(Icons.menu, color: _textSecondary, size: 24),
           ),
-          child: const Icon(Icons.menu, color: _textSecondary, size: 24),
         ),
       ],
     );
@@ -376,7 +377,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
                   ),
                 ),
                 Text(
-                  'Oct 24, 2023',
+                  _formattedDate,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: _textSecondary,
@@ -747,7 +748,7 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
               if (index == 1) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const WorkoutLibraryScreen(), reverse: true),
+                  AppRoute(page: const WorkoutLibraryScreen(), instant: true),
                 );
                 return;
               }
@@ -755,14 +756,14 @@ class _NutritionHubScreenState extends State<NutritionHubScreen> {
               if (index == 3) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const ProgressAnalyticsScreen()),
+                  AppRoute(page: const ProgressAnalyticsScreen(), instant: true),
                 );
                 return;
               }
               if (index == 4) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const AiCoachScreen()),
+                  AppRoute(page: const AiCoachScreen(), instant: true),
                 );
                 return;
               }
