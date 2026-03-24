@@ -19,6 +19,10 @@ class UserPrefs {
   static const _kStreak = 'streak_count';
   static const _kBio = 'user_bio';
   static const _kBioIsCustom = 'bio_is_custom';
+  static const _kWaterToday = 'water_today';
+  static const _kWaterDate = 'water_date';
+  static const _kMoodToday = 'mood_today';
+  static const _kMoodDate = 'mood_date';
 
   // ── Intention labels ────────────────────────────────────────────────────────
   static const intentionLabels = [
@@ -207,6 +211,45 @@ class UserPrefs {
     final prefs = await SharedPreferences.getInstance();
     final json = prefs.getString(_kDietaryFocus) ?? '[]';
     return List<String>.from(jsonDecode(json));
+  }
+
+  // ── Daily water tracking ───────────────────────────────────────────────────
+  static Future<int> getWaterToday() async {
+    final prefs = await SharedPreferences.getInstance();
+    final date = prefs.getString(_kWaterDate) ?? '';
+    if (date != _dateKey(DateTime.now())) return 0;
+    return prefs.getInt(_kWaterToday) ?? 0;
+  }
+
+  static Future<int> addWater(int delta) async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = _dateKey(DateTime.now());
+    final date = prefs.getString(_kWaterDate) ?? '';
+    int current = (date == today) ? (prefs.getInt(_kWaterToday) ?? 0) : 0;
+    current = (current + delta).clamp(0, 20);
+    await prefs.setInt(_kWaterToday, current);
+    await prefs.setString(_kWaterDate, today);
+    return current;
+  }
+
+  // ── Daily mood tracking ───────────────────────────────────────────────────
+  static Future<int?> getMoodToday() async {
+    final prefs = await SharedPreferences.getInstance();
+    final date = prefs.getString(_kMoodDate) ?? '';
+    if (date != _dateKey(DateTime.now())) return null;
+    final val = prefs.getInt(_kMoodToday);
+    return val;
+  }
+
+  static Future<void> saveMood(int? mood) async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = _dateKey(DateTime.now());
+    if (mood == null) {
+      await prefs.remove(_kMoodToday);
+    } else {
+      await prefs.setInt(_kMoodToday, mood);
+    }
+    await prefs.setString(_kMoodDate, today);
   }
 
   // ── Macros from TDEE ────────────────────────────────────────────────────────

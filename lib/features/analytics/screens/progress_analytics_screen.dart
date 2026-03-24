@@ -136,7 +136,16 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         Builder(
           builder: (ctx) => GestureDetector(
             onTap: () => Scaffold.of(ctx).openEndDrawer(),
-            child: const Icon(Icons.menu, color: _textSecondary, size: 24),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: _cardBg,
+                shape: BoxShape.circle,
+                border: Border.all(color: _outline),
+              ),
+              child: const Icon(Icons.menu_rounded, color: _textSecondary, size: 20),
+            ),
           ),
         ),
       ],
@@ -1051,7 +1060,8 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
   // ── BOTTOM NAV ───────────────────────────────────────────────────────────────
 
   Widget _bottomNav(double bottomPadding) {
-    final items = [
+    const labels = ['Home', 'Workout', 'Nutrition', 'Progress', 'Sage'];
+    final icons = [
       Icons.home_rounded,
       Icons.fitness_center,
       Icons.restaurant,
@@ -1060,7 +1070,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 10, 16, 10 + bottomPadding),
+      padding: EdgeInsets.fromLTRB(0, 8, 0, 8 + bottomPadding),
       decoration: BoxDecoration(
         color: _cardBg,
         border: const Border(top: BorderSide(color: _outline, width: 1)),
@@ -1074,7 +1084,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (index) {
+        children: List.generate(icons.length, (index) {
           final isActive = _currentNavIndex == index;
           return GestureDetector(
             onTap: () {
@@ -1085,37 +1095,48 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
               if (index == 1) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const WorkoutLibraryScreen(), instant: true),
+                  AppRoute(page: const WorkoutLibraryScreen()),
                 );
                 return;
               }
               if (index == 2) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const NutritionHubScreen(), instant: true),
+                  AppRoute(page: const NutritionHubScreen()),
                 );
                 return;
               }
+              if (index == 3) return; // already on Progress
               if (index == 4) {
                 Navigator.pushReplacement(
                   context,
-                  AppRoute(page: const AiCoachScreen(), instant: true),
+                  AppRoute(page: const AiCoachScreen()),
                 );
                 return;
               }
               setState(() => _currentNavIndex = index);
             },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-              decoration: BoxDecoration(
-                color: isActive ? _primaryContainer : Colors.transparent,
-                borderRadius: BorderRadius.circular(9999),
-              ),
-              child: Icon(
-                items[index],
-                color: isActive ? _primary : const Color(0xFFADB5BD),
-                size: 22,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icons[index],
+                    color: isActive ? _primary : const Color(0xFFADB5BD),
+                    size: 22,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    labels[index],
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 10,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                      color: isActive ? _primary : const Color(0xFFADB5BD),
+                    ),
+                  ),
+                ],
               ),
             ),
           );

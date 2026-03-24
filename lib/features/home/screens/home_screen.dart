@@ -21,7 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int? _selectedMood;
   String _userName = 'Friend';
   int _intention = 0;
+  int _activityLevel = 2;
   double _waterGoalL = 2.0;
+  int _waterGlasses = 0;
   int _streak = 1;
   List<String> _activities = [];
 
@@ -35,15 +37,21 @@ class _HomeScreenState extends State<HomeScreen> {
     final streak = await UserPrefs.checkAndUpdateStreak();
     final name = await UserPrefs.getName();
     final intention = await UserPrefs.getIntention();
-    final waterGlasses = await UserPrefs.getWaterGlasses();
+    final waterGoalGlasses = await UserPrefs.getWaterGlasses();
+    final waterToday = await UserPrefs.getWaterToday();
     final activities = await UserPrefs.getActivities();
+    final activityLevel = await UserPrefs.getActivityLevel();
+    final mood = await UserPrefs.getMoodToday();
     if (mounted) {
       setState(() {
         _userName = name;
         _intention = intention;
-        _waterGoalL = UserPrefs.waterLitres(waterGlasses);
+        _activityLevel = activityLevel;
+        _waterGoalL = UserPrefs.waterLitres(waterGoalGlasses);
+        _waterGlasses = waterToday;
         _streak = streak;
         _activities = activities;
+        _selectedMood = mood;
       });
     }
   }
@@ -62,6 +70,36 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'Good evening';
   }
 
+  String get _timeOfDayLabel {
+    final h = DateTime.now().hour;
+    if (h < 12) return 'this morning';
+    if (h < 17) return 'this afternoon';
+    return 'tonight';
+  }
+
+  String get _dailyQuote {
+    const quotes = [
+      '"Health is not just what you are eating. It is what you are thinking and saying."',
+      '"Take care of your body. It\'s the only place you have to live."',
+      '"The greatest wealth is health."',
+      '"Movement is a medicine for creating change in a person\'s physical, emotional, and mental states."',
+      '"Happiness is the highest form of health."',
+      '"A healthy outside starts from the inside."',
+      '"Your body hears everything your mind says. Stay positive."',
+      '"Wellness is the complete integration of body, mind, and spirit."',
+      '"Small steps every day lead to big changes over time."',
+      '"Rest when you need to, but never quit."',
+      '"Strength does not come from the body. It comes from the will."',
+      '"The only bad workout is the one that didn\'t happen."',
+      '"You don\'t have to be extreme. Just consistent."',
+      '"Progress, not perfection."',
+    ];
+    final dayOfYear = DateTime.now().difference(DateTime(DateTime.now().year)).inDays;
+    return quotes[dayOfYear % quotes.length];
+  }
+
+  double get _waterConsumedL => _waterGlasses * 0.25;
+
   static const _bg = Color(0xFFFBFAF8);
   static const _primary = Color(0xFF4E6451);
   static const _primaryContainer = Color(0xFFD0E9D1);
@@ -69,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _textSecondary = Color(0xFF5A605C);
   static const _cardBg = Color(0xFFFFFFFF);
   static const _outline = Color(0xFFE1E3E3);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -167,11 +204,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.flag_rounded,
+                    const Icon(Icons.local_fire_department_rounded,
                         color: _primary, size: 12),
                     const SizedBox(width: 4),
                     Text(
-                      '🔥 $_streak Day Streak · ${UserPrefs.intentionLabels[_intention.clamp(0,3)]}',
+                      '$_streak Day Streak · ${UserPrefs.intentionLabels[_intention.clamp(0,3)]}',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -188,7 +225,16 @@ class _HomeScreenState extends State<HomeScreen> {
         Builder(
           builder: (ctx) => GestureDetector(
             onTap: () => Scaffold.of(ctx).openEndDrawer(),
-            child: const Icon(Icons.menu, color: _textSecondary, size: 24),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: _cardBg,
+                shape: BoxShape.circle,
+                border: Border.all(color: _outline),
+              ),
+              child: const Icon(Icons.menu_rounded, color: _textSecondary, size: 20),
+            ),
           ),
         ),
       ],
@@ -212,33 +258,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Daily Progress',
-                style: GoogleFonts.manrope(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: _textPrimary,
-                  letterSpacing: -0.3,
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.circle, color: Color(0xFF6EC77A), size: 7),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Updated 5m ago',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11,
-                      color: _textSecondary,
-                      letterSpacing: 0.1,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          Text(
+            'Daily Progress',
+            style: GoogleFonts.manrope(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: _textPrimary,
+              letterSpacing: -0.3,
+            ),
           ),
           const SizedBox(height: 18),
 
@@ -381,19 +408,49 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: _outline),
-            borderRadius: BorderRadius.circular(20),
+        GestureDetector(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Device sync coming soon', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+                backgroundColor: _primary,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              border: Border.all(color: _outline),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text('Sync', style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w600, color: _textSecondary)),
           ),
-          child: Text('Sync', style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w600, color: _textSecondary)),
         ),
       ],
     );
   }
 
   Widget _workoutCard() {
+    final workoutName = _activities.isNotEmpty
+        ? '${_activities.first} Session'
+        : 'Morning Mobility\n& Breathwork';
+    final intensity = _activityLevel <= 1
+        ? 'Beginner'
+        : _activityLevel == 2
+            ? 'Intermediate'
+            : 'Advanced';
+    final duration = _activityLevel <= 1 ? '15m' : _activityLevel == 2 ? '25m' : '35m';
+    final iconData = _activities.isNotEmpty
+        ? _workoutIcon(_activities.first)
+        : Icons.self_improvement;
+    final categoryLabel = _activities.isNotEmpty
+        ? _activities.first
+        : 'Mobility';
+
     return Container(
       decoration: BoxDecoration(
         color: _cardBg,
@@ -408,7 +465,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          // Image area
           Container(
             width: 110,
             height: 130,
@@ -429,11 +485,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.self_improvement,
-                    color: Colors.white, size: 36),
+                Icon(iconData, color: Colors.white, size: 36),
                 const SizedBox(height: 6),
                 Text(
-                  'Mobility',
+                  categoryLabel,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10,
                     color: Colors.white.withValues(alpha: 0.85),
@@ -443,8 +498,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-
-          // Content
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(14),
@@ -452,8 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: _primaryContainer,
                       borderRadius: BorderRadius.circular(9999),
@@ -470,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    _activities.isNotEmpty ? '${_activities.first} Session' : 'Morning Mobility\n& Breathwork',
+                    workoutName,
                     style: GoogleFonts.manrope(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -482,45 +534,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.timer_outlined,
-                          color: _textSecondary, size: 12),
+                      const Icon(Icons.timer_outlined, color: _textSecondary, size: 12),
                       const SizedBox(width: 3),
-                      Text(
-                        '15m',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 11,
-                          color: _textSecondary,
-                        ),
-                      ),
+                      Text(duration, style: GoogleFonts.plusJakartaSans(fontSize: 11, color: _textSecondary)),
                       const SizedBox(width: 8),
-                      Container(
-                        width: 3,
-                        height: 3,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _textSecondary,
-                        ),
-                      ),
+                      Container(width: 3, height: 3, decoration: const BoxDecoration(shape: BoxShape.circle, color: _textSecondary)),
                       const SizedBox(width: 8),
-                      Text(
-                        'Beginner',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 11,
-                          color: _textSecondary,
-                        ),
-                      ),
+                      Text(intensity, style: GoogleFonts.plusJakartaSans(fontSize: 11, color: _textSecondary)),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'A gentle flow to wake up your joints and find mental clarity...',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 10,
-                      color: _textSecondary,
-                      height: 1.4,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
@@ -532,8 +553,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ).then((_) => setState(() => _currentNavIndex = 0));
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 7),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                       decoration: BoxDecoration(
                         color: _primary,
                         borderRadius: BorderRadius.circular(9999),
@@ -541,8 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.play_arrow_rounded,
-                              color: Colors.white, size: 14),
+                          const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 14),
                           const SizedBox(width: 4),
                           Text(
                             'Start Session',
@@ -565,7 +584,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  IconData _workoutIcon(String activity) {
+    switch (activity.toLowerCase()) {
+      case 'yoga': return Icons.self_improvement;
+      case 'running': return Icons.directions_run;
+      case 'swimming': return Icons.pool;
+      case 'cycling': return Icons.pedal_bike;
+      case 'strength':
+      case 'weight training': return Icons.fitness_center;
+      case 'pilates': return Icons.accessibility_new;
+      case 'hiit': return Icons.local_fire_department;
+      case 'meditation': return Icons.spa;
+      default: return Icons.sports;
+    }
+  }
+
   Widget _waterCard() {
+    final progress = _waterGoalL > 0 ? (_waterConsumedL / _waterGoalL).clamp(0.0, 1.0) : 0.0;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -582,15 +618,56 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFFD6EAF8),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(Icons.water_drop_outlined,
-                color: Color(0xFF2E86C1), size: 18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD6EAF8),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.water_drop_outlined,
+                    color: Color(0xFF2E86C1), size: 18),
+              ),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      final val = await UserPrefs.addWater(-1);
+                      setState(() => _waterGlasses = val);
+                    },
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: _bg,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: _outline),
+                      ),
+                      child: const Icon(Icons.remove, size: 14, color: _textSecondary),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  GestureDetector(
+                    onTap: () async {
+                      final val = await UserPrefs.addWater(1);
+                      setState(() => _waterGlasses = val);
+                    },
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2E86C1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.add, size: 14, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           Text(
@@ -606,7 +683,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '0',
+                _waterConsumedL.toStringAsFixed(1),
                 style: GoogleFonts.manrope(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
@@ -630,17 +707,17 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(9999),
-            child: const LinearProgressIndicator(
-              value: 0.0,
-              backgroundColor: Color(0xFFD6EAF8),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: const Color(0xFFD6EAF8),
               valueColor:
-                  AlwaysStoppedAnimation<Color>(Color(0xFF2E86C1)),
+                  const AlwaysStoppedAnimation<Color>(Color(0xFF2E86C1)),
               minHeight: 5,
             ),
           ),
           const SizedBox(height: 6),
           Text(
-            'Goal: ${_waterGoalL.toStringAsFixed(1)}L · Not synced',
+            '$_waterGlasses of ${(_waterGoalL / 0.25).round()} glasses',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 10,
               color: _textSecondary,
@@ -698,7 +775,6 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
             ),
           ),
-          const SizedBox(height: 8),
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(9999),
@@ -758,7 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            '"Health is not just what you are eating. It is what you are thinking and saying."',
+            _dailyQuote,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               color: _textPrimary,
@@ -768,7 +844,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'How are you feeling emotionally this morning?',
+            'How are you feeling $_timeOfDayLabel?',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -783,8 +859,26 @@ class _HomeScreenState extends State<HomeScreen> {
               return Padding(
                 padding: EdgeInsets.only(right: i < moods.length - 1 ? 8 : 0),
                 child: GestureDetector(
-                  onTap: () =>
-                      setState(() => _selectedMood = isSelected ? null : i),
+                  onTap: () async {
+                    final newMood = isSelected ? null : i;
+                    setState(() => _selectedMood = newMood);
+                    await UserPrefs.saveMood(newMood);
+                    if (mounted && newMood != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Feeling ${moods[newMood]['label']} — noted!',
+                            style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                          ),
+                          backgroundColor: _primary,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
                     padding: const EdgeInsets.symmetric(
@@ -829,7 +923,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _bottomNav(double bottomPadding) {
-    final items = [
+    const labels = ['Home', 'Workout', 'Nutrition', 'Progress', 'Sage'];
+    final icons = [
       Icons.home_rounded,
       Icons.fitness_center,
       Icons.restaurant,
@@ -838,7 +933,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 10, 16, 10 + bottomPadding),
+      padding: EdgeInsets.fromLTRB(0, 8, 0, 8 + bottomPadding),
       decoration: BoxDecoration(
         color: _cardBg,
         border: Border(
@@ -854,47 +949,44 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (index) {
+        children: List.generate(icons.length, (index) {
           final isActive = _currentNavIndex == index;
           return GestureDetector(
             onTap: () {
+              if (index == 0) return; // already on Home
               setState(() => _currentNavIndex = index);
-              if (index == 1) {
-                Navigator.push(
-                  context,
-                  AppRoute(page: const WorkoutLibraryScreen(), instant: true),
-                ).then((_) => setState(() => _currentNavIndex = 0));
-              } else if (index == 2) {
-                Navigator.push(
-                  context,
-                  AppRoute(page: const NutritionHubScreen(), instant: true),
-                ).then((_) => setState(() => _currentNavIndex = 0));
-              } else if (index == 3) {
-                Navigator.push(
-                  context,
-                  AppRoute(page: const ProgressAnalyticsScreen(), instant: true),
-                ).then((_) => setState(() => _currentNavIndex = 0));
-              } else if (index == 4) {
-                Navigator.push(
-                  context,
-                  AppRoute(page: const AiCoachScreen(), instant: true),
-                ).then((_) => setState(() => _currentNavIndex = 0));
+              Widget screen;
+              switch (index) {
+                case 1: screen = const WorkoutLibraryScreen(); break;
+                case 2: screen = const NutritionHubScreen(); break;
+                case 3: screen = const ProgressAnalyticsScreen(); break;
+                case 4: screen = const AiCoachScreen(); break;
+                default: return;
               }
+              Navigator.push(context, AppRoute(page: screen))
+                  .then((_) => setState(() => _currentNavIndex = 0));
             },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-              decoration: BoxDecoration(
-                color: isActive
-                    ? _primaryContainer
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(9999),
-              ),
-              child: Icon(
-                items[index],
-                color: isActive ? _primary : const Color(0xFFADB5BD),
-                size: 22,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icons[index],
+                    color: isActive ? _primary : const Color(0xFFADB5BD),
+                    size: 22,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    labels[index],
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 10,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                      color: isActive ? _primary : const Color(0xFFADB5BD),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
